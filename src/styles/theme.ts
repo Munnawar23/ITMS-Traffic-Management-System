@@ -1,9 +1,9 @@
 export const colors = {
   background: "#F4F5F7",
-  card: "#0A1B57",
+  card: "#1D4ED8",
   text: "#0B0B0B",
   subtext: "#6C757D",
-  primary: "#102C74",
+  primary: "#1E40AF",
   accent: "#6C63FF",
   border: "#C7D2FE",
 };

@@ -86,12 +86,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: theme.fontFamily.heading,
     color: "#000000",
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: theme.fontFamily["body-medium"],
     color: "#000000",
     marginTop: 2,

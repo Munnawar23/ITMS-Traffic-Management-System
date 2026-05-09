@@ -29,6 +29,23 @@
     "noActivity": "No Recent Activity",
     "noActivityDesc": "Your traffic management activities will appear here."
   },
+  "home": {
+    "welcomeBack": "Welcome back",
+    "junctionStatus": "Junction Status",
+    "realTime": "Real-time",
+    "systemAlerts": "System Alerts",
+    "oneAlert": "1 Alert",
+    "recentActions": "Recent Actions",
+    "today": "Today",
+    "junction": "Junction",
+    "status": "Status",
+    "mode": "Mode",
+    "temperature": "Temperature",
+    "running": "Running",
+    "yellow": "Yellow",
+    "lowBattery": "Low Battery Backup",
+    "batteryDesc": "Battery at 39% — Consider charging soon"
+  },
   "tabs": {
     "home": "Home",
     "activity": "Activity",
@@ -55,5 +72,19 @@
     "logout": "Logout",
     "english": "English",
     "hindi": "Hindi"
+  },
+  "mode": {
+    "activeControl": "ACTIVE CONTROL",
+    "selectionTitle": "Signal Mode Selection",
+    "systemOnline": "System Online",
+    "availableModes": "Available Modes",
+    "realTime": "Real-time",
+    "active": "Active",
+    "inactive": "Inactive",
+    "applySettings": "Apply Mode Settings",
+    "timeset": "Time Set",
+    "auto": "Auto (AI)",
+    "blinker": "Blinker",
+    "vip": "Emergency / VIP"
   }
 }

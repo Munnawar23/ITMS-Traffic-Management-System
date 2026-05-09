@@ -29,6 +29,23 @@
     "noActivity": "कोई हालिया गतिविधि नहीं",
     "noActivityDesc": "आपकी यातायात प्रबंधन गतिविधियाँ यहाँ दिखाई देंगी।"
   },
+  "home": {
+    "welcomeBack": "वापस स्वागत है",
+    "junctionStatus": "जंक्शन स्थिति",
+    "realTime": "रियल-टाइम",
+    "systemAlerts": "सिस्टम अलर्ट",
+    "oneAlert": "1 अलर्ट",
+    "recentActions": "हाल की गतिविधियां",
+    "today": "आज",
+    "junction": "जंक्शन",
+    "status": "स्थिति",
+    "mode": "मोड",
+    "temperature": "तापमान",
+    "running": "चल रहा है",
+    "yellow": "पीला",
+    "lowBattery": "लो बैटरी बैकअप",
+    "batteryDesc": "बैटरी 39% पर है - कृपया जल्द चार्ज करें"
+  },
   "tabs": {
     "home": "होम",
     "activity": "गतिविधि",
@@ -55,5 +72,19 @@
     "logout": "लॉग आउट",
     "english": "अंग्रेज़ी",
     "hindi": "हिंदी"
+  },
+  "mode": {
+    "activeControl": "सक्रिय नियंत्रण",
+    "selectionTitle": "सिग्नल मोड चयन",
+    "systemOnline": "सिस्टम ऑनलाइन",
+    "availableModes": "उपलब्ध मोड",
+    "realTime": "रियल-टाइम",
+    "active": "सक्रिय",
+    "inactive": "निष्क्रिय",
+    "applySettings": "मोड सेटिंग्स लागू करें",
+    "timeset": "समय सेट",
+    "auto": "ऑटो (AI)",
+    "blinker": "ब्लिंकर",
+    "vip": "आपातकाल / VIP"
   }
 }
