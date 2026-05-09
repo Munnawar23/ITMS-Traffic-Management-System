@@ -14,14 +14,13 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: theme.colors.primary,
-        tabBarInactiveTintColor: "#666666",
+        tabBarActiveTintColor: "#ffffff",
+        tabBarInactiveTintColor: "rgba(255, 255, 255, 0.6)",
         tabBarStyle: {
-          borderTopWidth: 1,
-          borderTopColor: theme.colors.border,
-          backgroundColor: "#ffffff",
-          height: 60 + insets.bottom,
-          paddingBottom: insets.bottom > 0 ? insets.bottom - 4 : 8,
+          borderTopWidth: 0,
+          backgroundColor: theme.colors.primary,
+          height: 65 + insets.bottom,
+          paddingBottom: insets.bottom > 0 ? insets.bottom - 4 : 10,
           paddingTop: 8,
           ...styles.shadow,
         },
@@ -46,12 +45,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="mode"
+        name="activity"
         options={{
-          title: t("tabs.mode") || "Mode",
+          title: t("tabs.activity") || "Activity",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "settings" : "settings-outline"}
+            <MaterialCommunityIcons
+              name={focused ? "clipboard-text" : "clipboard-text-outline"}
               size={24}
               color={color}
             />
@@ -59,12 +58,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="activity"
+        name="mode"
         options={{
-          title: t("tabs.activity") || "Activity",
+          title: t("tabs.mode") || "Mode",
           tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons
-              name={focused ? "clipboard-text" : "clipboard-text-outline"}
+            <Ionicons
+              name={focused ? "settings" : "settings-outline"}
               size={24}
               color={color}
             />
@@ -82,8 +81,8 @@ const styles = StyleSheet.create({
       width: 0,
       height: -4,
     },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 8,
   },
 });
