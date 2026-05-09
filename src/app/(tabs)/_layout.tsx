@@ -45,12 +45,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="activity"
+        name="mode"
         options={{
-          title: t("tabs.activity") || "Activity",
+          title: t("tabs.mode") || "Mode",
           tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons
-              name={focused ? "clipboard-text" : "clipboard-text-outline"}
+            <Ionicons
+              name={focused ? "settings" : "settings-outline"}
               size={24}
               color={color}
             />
@@ -58,12 +58,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="mode"
+        name="activity"
         options={{
-          title: t("tabs.mode") || "Mode",
+          title: t("tabs.activity") || "Activity",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "settings" : "settings-outline"}
+            <MaterialCommunityIcons
+              name={focused ? "clipboard-text" : "clipboard-text-outline"}
               size={24}
               color={color}
             />
