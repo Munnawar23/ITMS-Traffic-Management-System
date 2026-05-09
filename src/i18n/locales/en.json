@@ -32,10 +32,18 @@
   "tabs": {
     "home": "Home",
     "activity": "Activity",
-    "mode": "Mode"
+    "mode": "Mode",
+    "profile": "Profile"
   },
   "profile": {
-    "version": "Version 1.0.0"
+    "version": "Version 1.0.0",
+    "languageSettings": "Language Settings",
+    "support": "Support & Feedback",
+    "contactUs": "Contact Us",
+    "logout": "Logout",
+    "logoutConfirmTitle": "Logout",
+    "logoutConfirmMsg": "Are you sure you want to logout?",
+    "cancel": "Cancel"
   },
   "common": {
     "loading": "Loading...",

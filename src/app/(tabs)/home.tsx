@@ -17,6 +17,7 @@ export default function HomeScreen() {
       <TopIndicator />
       <ScreenHeader 
         title={greeting} 
+        subtitle={formatDate()}
         rightIcon={
           <TouchableOpacity style={styles.profileButton}>
             <Ionicons name="person" size={24} color={theme.colors.primary} />

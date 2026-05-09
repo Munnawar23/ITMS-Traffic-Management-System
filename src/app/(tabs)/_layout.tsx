@@ -19,7 +19,7 @@ export default function TabLayout() {
         tabBarStyle: {
           borderTopWidth: 0,
           backgroundColor: theme.colors.primary,
-          height: 65 + insets.bottom,
+          height: 55 + insets.bottom,
           paddingBottom: insets.bottom > 0 ? insets.bottom - 4 : 10,
           paddingTop: 8,
           ...styles.shadow,
@@ -64,6 +64,19 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "settings" : "settings-outline"}
+              size={24}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: t("tabs.profile") || "Profile",
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? "person" : "person-outline"}
               size={24}
               color={color}
             />

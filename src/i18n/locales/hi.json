@@ -32,10 +32,18 @@
   "tabs": {
     "home": "होम",
     "activity": "गतिविधि",
-    "mode": "मोड"
+    "mode": "मोड",
+    "profile": "प्रोफ़ाइल"
   },
   "profile": {
-    "version": "संस्करण 1.0.0"
+    "version": "संस्करण 1.0.0",
+    "languageSettings": "भाषा सेटिंग",
+    "support": "सहायता और प्रतिक्रिया",
+    "contactUs": "हमसे संपर्क करें",
+    "logout": "लॉग आउट",
+    "logoutConfirmTitle": "लॉग आउट",
+    "logoutConfirmMsg": "क्या आप वाकई लॉग आउट करना चाहते हैं?",
+    "cancel": "रद्द करें"
   },
   "common": {
     "loading": "लोड हो रहा है...",

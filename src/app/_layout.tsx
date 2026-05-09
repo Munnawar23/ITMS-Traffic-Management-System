@@ -4,6 +4,8 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+import { useAuthStore } from "@/store/authStore";
+import i18next from "i18next";
 
 
 // Keep the splash screen visible while we fetch resources
@@ -17,11 +19,19 @@ export default function RootLayout() {
     "Poppins-SemiBold": require("@/assets/fonts/Poppins-SemiBold.ttf"),
   });
 
+  const language = useAuthStore((state) => state.language);
+
   useEffect(() => {
     if (loaded || error) {
       SplashScreen.hideAsync();
     }
   }, [loaded, error]);
+
+  useEffect(() => {
+    if (language) {
+      i18next.changeLanguage(language);
+    }
+  }, [language]);
 
   if (!loaded && !error) {
     return null;

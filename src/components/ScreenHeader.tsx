@@ -27,16 +27,21 @@ const ScreenHeader: React.FC<ScreenHeaderProps> = ({
       <View style={styles.headerRow}>
         {leftIcon && <View style={styles.leftIconContainer}>{leftIcon}</View>}
         <View style={styles.headerContent}>
-          <Text style={styles.title} numberOfLines={1}>{title}</Text>
-          {subtitle && <Text style={styles.subtitle} numberOfLines={1}>{subtitle}</Text>}
+          <Text style={styles.title} numberOfLines={1}>
+            {title}
+          </Text>
+          {subtitle && (
+            <Text style={styles.subtitle} numberOfLines={1}>
+              {subtitle}
+            </Text>
+          )}
         </View>
         <View style={styles.actionButtons}>
-          {rightIcon && <View style={styles.rightIconContainer}>{rightIcon}</View>}
+          {rightIcon && (
+            <View style={styles.rightIconContainer}>{rightIcon}</View>
+          )}
           {onRefresh && (
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={onRefresh}
-            >
+            <TouchableOpacity style={styles.iconButton} onPress={onRefresh}>
               <Ionicons
                 name="refresh-outline"
                 size={24}
@@ -45,10 +50,7 @@ const ScreenHeader: React.FC<ScreenHeaderProps> = ({
             </TouchableOpacity>
           )}
           {onSearchPress && (
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={onSearchPress}
-            >
+            <TouchableOpacity style={styles.iconButton} onPress={onSearchPress}>
               <Ionicons
                 name="search-outline"
                 size={24}
@@ -67,7 +69,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 12,
     paddingBottom: 12,
-    backgroundColor: "#ffffff",
+    backgroundColor: theme.colors.background,
   },
   border: {
     borderBottomWidth: 1,
@@ -91,7 +93,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     fontFamily: theme.fontFamily["body-medium"],
-    color: "#6B7280",
+    color: "#000000",
     marginTop: 2,
   },
   actionButtons: {
