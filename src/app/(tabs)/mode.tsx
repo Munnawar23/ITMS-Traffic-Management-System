@@ -2,6 +2,7 @@ import TopIndicator from "@/components/TopIndicator";
 import { hp, wp } from "@/helpers";
 import { theme } from "@/styles/theme";
 import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -138,6 +139,11 @@ export default function ModeScreen() {
   const { t } = useTranslation();
   const [activeMode, setActiveMode] = useState<ModeKey>("blinker");
 
+  const handleModeChange = async (key: ModeKey) => {
+    setActiveMode(key);
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+  };
+
   const MODES: ModeOption[] = [
     {
       key: "timeset",
@@ -208,7 +214,7 @@ export default function ModeScreen() {
               isActive={activeMode === mode.key}
               label={t(`mode.${mode.key}`)}
               description={mode.description}
-              onPress={() => setActiveMode(mode.key)}
+              onPress={() => handleModeChange(mode.key)}
             />
           ))}
         </View>
