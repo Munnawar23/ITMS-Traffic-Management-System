@@ -1,0 +1,51 @@
+{
+  "login": {
+    "title": "ITMS",
+    "subtitle": "Traffic Management System",
+    "welcome": "Welcome back, Jawan",
+    "pin": "PIN",
+    "password": "Password",
+    "email": "Phone Number",
+    "emailPlaceholder": "Enter phone number",
+    "passwordPlaceholder": "Enter password",
+    "pinPlaceholder": "Enter 5-digit PIN",
+    "signIn": "Sign In",
+    "help": "Need Help?",
+    "trouble": "Having trouble signing in?",
+    "contactAdmin": "Contact Administrator",
+    "validation": {
+      "invalidEmail": "Invalid Phone",
+      "invalidEmailMsg": "Please enter a valid 10-digit phone number.",
+      "invalidPassword": "Invalid Password",
+      "invalidPasswordMsg": "Password must be at least 6 characters.",
+      "invalidPin": "Invalid PIN",
+      "invalidPinMsg": "Please enter a valid 5-digit PIN.",
+      "loginFailed": "Login Failed",
+      "loginFailedMsg": "Invalid credentials. Please try again.",
+      "error": "Error"
+    }
+  },
+  "activity": {
+    "noActivity": "No Recent Activity",
+    "noActivityDesc": "Your traffic management activities will appear here."
+  },
+  "tabs": {
+    "home": "Home",
+    "activity": "Activity",
+    "mode": "Mode"
+  },
+  "profile": {
+    "version": "Version 1.0.0"
+  },
+  "common": {
+    "loading": "Loading...",
+    "goodMorning": "Good Morning",
+    "goodAfternoon": "Good Afternoon",
+    "goodEvening": "Good Evening",
+    "settings": "Settings",
+    "language": "Language",
+    "logout": "Logout",
+    "english": "English",
+    "hindi": "Hindi"
+  }
+}

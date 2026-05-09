@@ -1,0 +1,51 @@
+{
+  "login": {
+    "title": "ITMS",
+    "subtitle": "यातायात प्रबंधन प्रणाली",
+    "welcome": "वापसी पर स्वागत है, जवान",
+    "pin": "पिन",
+    "password": "पासवर्ड",
+    "email": "फ़ोन नंबर",
+    "emailPlaceholder": "फ़ोन नंबर दर्ज करें",
+    "passwordPlaceholder": "पासवर्ड दर्ज करें",
+    "pinPlaceholder": "5-अंकीय पिन दर्ज करें",
+    "signIn": "साइन इन करें",
+    "help": "मदद चाहिए?",
+    "trouble": "साइन इन करने में समस्या आ रही है?",
+    "contactAdmin": "प्रशासक से संपर्क करें",
+    "validation": {
+      "invalidEmail": "अमान्य फ़ोन",
+      "invalidEmailMsg": "कृपया एक मान्य 10-अंकीय फ़ोन नंबर दर्ज करें।",
+      "invalidPassword": "अमान्य पासवर्ड",
+      "invalidPasswordMsg": "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।",
+      "invalidPin": "अमान्य पिन",
+      "invalidPinMsg": "कृपया एक मान्य 5-अंकीय पिन दर्ज करें।",
+      "loginFailed": "लॉगिन विफल",
+      "loginFailedMsg": "अमान्य क्रेडेंशियल। कृपया पुनः प्रयास करें।",
+      "error": "त्रुटि"
+    }
+  },
+  "activity": {
+    "noActivity": "कोई हालिया गतिविधि नहीं",
+    "noActivityDesc": "आपकी यातायात प्रबंधन गतिविधियाँ यहाँ दिखाई देंगी।"
+  },
+  "tabs": {
+    "home": "होम",
+    "activity": "गतिविधि",
+    "mode": "मोड"
+  },
+  "profile": {
+    "version": "संस्करण 1.0.0"
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "goodMorning": "शुभ प्रभात",
+    "goodAfternoon": "शुभ दोपहर",
+    "goodEvening": "शुभ संध्या",
+    "settings": "सेटिंग्स",
+    "language": "भाषा",
+    "logout": "लॉग आउट",
+    "english": "अंग्रेज़ी",
+    "hindi": "हिंदी"
+  }
+}
