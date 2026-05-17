@@ -6,6 +6,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { useAuthStore } from "@/store/authStore";
 import i18next from "i18next";
+import Toast from "react-native-toast-message";
 
 
 // Keep the splash screen visible while we fetch resources
@@ -41,6 +42,7 @@ export default function RootLayout() {
     <>
       <Stack screenOptions={{ headerShown: false }} />
       <StatusBar style="dark" />
+      <Toast />
     </>
   );
 }

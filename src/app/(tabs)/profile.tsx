@@ -1,6 +1,7 @@
-import Button from "@/components/Button";
-import ProfileMenuItem from "@/components/ProfileMenuItem";
-import TopIndicator from "@/components/TopIndicator";
+import Button from "@/components/common/Button";
+import ProfileMenuItem from "@/components/common/ProfileMenuItem";
+import TopIndicator from "@/components/common/TopIndicator";
+
 import { useAuthStore } from "@/store/authStore";
 import { theme } from "@/styles/theme";
 import { Ionicons } from "@expo/vector-icons";

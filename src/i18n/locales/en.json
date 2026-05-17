@@ -85,6 +85,55 @@
     "timeset": "Time Set",
     "auto": "Auto (AI)",
     "blinker": "Blinker",
-    "vip": "Emergency / VIP"
+    "vip": "Emergency / VIP",
+    "timesetModal": {
+      "title": "Configure Lane Durations",
+      "subtitle": "Set signal timing in minutes for each lane",
+      "lane1": "Lane 1",
+      "lane2": "Lane 2",
+      "lane3": "Lane 3",
+      "lane4": "Lane 4",
+      "placeholder": "Min",
+      "done": "Done",
+      "cancel": "Cancel",
+      "toastTitle": "Signal Timing Applied",
+      "toastSubtitle": "Lane durations have been updated successfully."
+    },
+    "autoModal": {
+      "title": "Select AI Strategy",
+      "subtitle": "Choose how the AI optimizes the signal cycle",
+      "cycleAuto": "Cycle Auto",
+      "cycleAutoDesc": "Optimizes cycle length dynamically based on queue density",
+      "jumpMode": "Jump Mode",
+      "jumpModeDesc": "Instantly green lights high traffic lanes to clear congestions",
+      "cancel": "Cancel",
+      "done": "Done",
+      "toastTitle": "AI Mode Activated",
+      "toastSubtitle": "AI strategy applied successfully."
+    },
+    "vipModal": {
+      "title": "Emergency VIP Control",
+      "subtitle": "Select lanes to apply priority clearance mode",
+      "lane1": "Lane 1",
+      "lane2": "Lane 2",
+      "lane3": "Lane 3",
+      "lane4": "Lane 4",
+      "cancel": "Cancel",
+      "done": "Done",
+      "toastTitle": "Emergency VIP Active",
+      "toastSubtitle": "Priority clearance applied for selected lanes."
+    },
+    "blinkerModal": {
+      "title": "Blinker Warning Control",
+      "subtitle": "Select lanes to activate warning blinkers",
+      "lane1": "Lane 1",
+      "lane2": "Lane 2",
+      "lane3": "Lane 3",
+      "lane4": "Lane 4",
+      "cancel": "Cancel",
+      "done": "Done",
+      "toastTitle": "Blinker Mode Active",
+      "toastSubtitle": "Warning blinkers active on selected lanes."
+    }
   }
 }

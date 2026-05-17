@@ -1,6 +1,6 @@
 import { getProfileApi, loginApi } from "@/api/login";
-import Button from "@/components/Button";
-import TopIndicator from "@/components/TopIndicator";
+import Button from "@/components/common/Button";
+import TopIndicator from "@/components/common/TopIndicator";
 import { useAuthStore } from "@/store/authStore";
 import { theme } from "@/styles/theme";
 import { Ionicons } from "@expo/vector-icons";

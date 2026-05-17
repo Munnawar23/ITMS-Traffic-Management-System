@@ -1,5 +1,5 @@
 import StatusCard from "@/components/screens/home/StatusCard";
-import TopIndicator from "@/components/TopIndicator";
+import TopIndicator from "@/components/common/TopIndicator";
 import { useAuthStore } from "@/store/authStore";
 import { theme } from "@/styles/theme";
 import { formatDate, getGreeting } from "@/utils/dateUtils";
@@ -52,59 +52,6 @@ function FadeSlideIn({
 /* ─────────────────────────────────────────────────────── */
 /*  Sub-components                                        */
 /* ─────────────────────────────────────────────────────── */
-function MetricChip({
-  icon,
-  label,
-  value,
-  color,
-}: {
-  icon: any;
-  label: string;
-  value: string;
-  color: string;
-}) {
-  return (
-    <View style={chipStyles.wrap}>
-      <View style={[chipStyles.iconCircle, { backgroundColor: color + "20" }]}>
-        <Ionicons name={icon} size={16} color={color} />
-      </View>
-      <Text style={chipStyles.value}>{value}</Text>
-      <Text style={chipStyles.label}>{label}</Text>
-    </View>
-  );
-}
-
-const chipStyles = StyleSheet.create({
-  wrap: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: 14,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "rgba(30,64,175,0.07)",
-  },
-  iconCircle: {
-    width: 34,
-    height: 34,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 6,
-  },
-  value: {
-    fontSize: 18,
-    fontFamily: theme.fontFamily.heading,
-    color: "#000000",
-    marginBottom: 1,
-  },
-  label: {
-    fontSize: 11,
-    fontFamily: theme.fontFamily["body-medium"],
-    color: "#000000",
-    textAlign: "center",
-  },
-});
 
 function SectionHeader({
   title,
@@ -259,28 +206,6 @@ export default function HomeScreen() {
         </View>
       </FadeSlideIn>
 
-      {/* ── Quick Metrics strip ──────────────────────────── */}
-      <View style={styles.metricsStrip}>
-        <MetricChip
-          icon="git-network-outline"
-          label="Junctions"
-          value="12"
-          color="#6C63FF"
-        />
-        <MetricChip icon="pulse" label="Online" value="11" color="#34D399" />
-        <MetricChip
-          icon="alert-circle-outline"
-          label="Alerts"
-          value="1"
-          color="#FBBF24"
-        />
-        <MetricChip
-          icon="speedometer-outline"
-          label="Avg Delay"
-          value="4s"
-          color="#60A5FA"
-        />
-      </View>
 
       {/* ── System Alert ─────────────────────────────────── */}
       <SectionHeader
@@ -559,13 +484,6 @@ const styles = StyleSheet.create({
     letterSpacing: 1.2,
   },
 
-  /* Metrics strip */
-  metricsStrip: {
-    flexDirection: "row",
-    marginHorizontal: 16,
-    marginTop: 16,
-    gap: 8,
-  },
 
   /* Stats grid */
   statsGrid: {

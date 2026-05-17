@@ -1,5 +1,5 @@
-import EmptyState from "@/components/EmptyState";
-import TopIndicator from "@/components/TopIndicator";
+import EmptyState from "@/components/common/EmptyState";
+import TopIndicator from "@/components/common/TopIndicator";
 import { theme } from "@/styles/theme";
 import React from "react";
 import { useTranslation } from "react-i18next";
