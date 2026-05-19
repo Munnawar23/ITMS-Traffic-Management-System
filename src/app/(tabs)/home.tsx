@@ -26,7 +26,6 @@ export default function HomeScreen() {
   // Retrieve active traffic light statuses and action logs from Zustand store
   const {
     currentMode,
-    inferenceHas,
     vipActive,
     vipLanesGreen,
     logs,
@@ -136,20 +135,6 @@ export default function HomeScreen() {
               valueColor={modeInfo.color}
               accentColor={modeInfo.color}
               gradientColors={["#1E40AF", "#1D4ED8", "#6C63FF"]}
-            />
-            <View style={{ width: 12 }} />
-            <StatusCard
-              label="YOLO AI Detect"
-              value={
-                inferenceHas
-                  ? t("home.active", "Active")
-                  : t("home.inactive", "Inactive")
-              }
-              icon="eye-outline"
-              valueColor={inferenceHas ? "#34D399" : "#9CA3AF"}
-              accentColor={inferenceHas ? "#34D399" : "#9CA3AF"}
-              gradientColors={["#1E40AF", "#1D4ED8", "#6C63FF"]}
-              isPulsing={inferenceHas}
             />
           </View>
         </View>

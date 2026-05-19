@@ -1,4 +1,4 @@
-import { theme } from "@/styles/theme";
+import { theme, useAppTheme } from "@/styles/theme";
 import { Ionicons } from "@expo/vector-icons";
 import LottieView from "lottie-react-native";
 import React from "react";
@@ -17,9 +17,11 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   icon = "ticket-outline",
   lottieSource,
 }) => {
+  const { colors } = useAppTheme();
+
   return (
     <View style={styles.container}>
-      <View style={styles.iconCircle}>
+      <View style={[styles.iconCircle, { backgroundColor: colors.primary + "15" }]}>
         {lottieSource ? (
           <LottieView
             source={lottieSource}
@@ -28,13 +30,13 @@ const EmptyState: React.FC<EmptyStateProps> = ({
             style={styles.lottie}
           />
         ) : (
-          <View style={styles.iconInner}>
-            <Ionicons name={icon as any} size={48} color={theme.colors.primary} />
+          <View style={[styles.iconInner, { backgroundColor: colors.primary + "20", borderColor: colors.primary }]}>
+            <Ionicons name={icon as any} size={48} color={colors.primary} />
           </View>
         )}
       </View>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.subtitle}>{subtitle}</Text>
+      <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
+      <Text style={[styles.subtitle, { color: colors.subtext }]}>{subtitle}</Text>
     </View>
   );
 };

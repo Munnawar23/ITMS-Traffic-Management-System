@@ -101,12 +101,12 @@
     "vip": "Emergency / VIP",
     "timesetModal": {
       "title": "Configure Lane Durations",
-      "subtitle": "Set signal timing in minutes for each lane",
+      "subtitle": "Set signal timing in seconds for each lane",
       "lane1": "Lane 1",
       "lane2": "Lane 2",
       "lane3": "Lane 3",
       "lane4": "Lane 4",
-      "placeholder": "Min",
+      "placeholder": "Sec",
       "done": "Done",
       "cancel": "Cancel",
       "toastTitle": "Signal Timing Applied",
@@ -137,16 +137,14 @@
       "toastSubtitle": "Priority clearance applied for selected lanes."
     },
     "blinkerModal": {
-      "title": "Blinker Warning Control",
-      "subtitle": "Select lanes to activate warning blinkers",
-      "lane1": "Lane 1",
-      "lane2": "Lane 2",
-      "lane3": "Lane 3",
-      "lane4": "Lane 4",
+      "title": "Blinker Mode",
+      "subtitle": "Warning yellow flash mode activation",
+      "warningText": "Activating blinker mode will switch all signal lights at the junction to flash yellow warning signals.",
+      "warningTextConfirm": "Are you sure you want to proceed?",
       "cancel": "Cancel",
-      "done": "Done",
+      "done": "Yes",
       "toastTitle": "Blinker Mode Active",
-      "toastSubtitle": "Warning blinkers active on selected lanes."
+      "toastSubtitle": "Warning blinkers active at the junction."
     }
   }
 }

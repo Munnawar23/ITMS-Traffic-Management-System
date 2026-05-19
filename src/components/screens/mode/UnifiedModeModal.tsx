@@ -33,7 +33,7 @@ export default function UnifiedModeModal({
   onDone,
 }: UnifiedModeModalProps) {
   const { t } = useTranslation();
-  const { colors } = useAppTheme();
+  const { colors, isDark } = useAppTheme();
 
   // Local state managers
   const [localLaneTimes, setLocalLaneTimes] = useState({
@@ -59,7 +59,7 @@ export default function UnifiedModeModal({
         setLocalLaneTimes(initialData);
       } else if (modeKey === "auto") {
         setLocalStrategy(initialData);
-      } else if (modeKey === "vip" || modeKey === "blinker") {
+      } else if (modeKey === "vip") {
         setLocalLanes(initialData);
       }
     }
@@ -77,10 +77,10 @@ export default function UnifiedModeModal({
         localLaneTimes.lane4.trim() !== ""
       );
     }
-    if (modeKey === "auto") {
+    if (modeKey === "auto" || modeKey === "blinker") {
       return true;
     }
-    if (modeKey === "vip" || modeKey === "blinker") {
+    if (modeKey === "vip") {
       return (
         localLanes.lane1 ||
         localLanes.lane2 ||
@@ -97,8 +97,10 @@ export default function UnifiedModeModal({
       onDone(localLaneTimes);
     } else if (modeKey === "auto") {
       onDone(localStrategy);
-    } else if (modeKey === "vip" || modeKey === "blinker") {
+    } else if (modeKey === "vip") {
       onDone(localLanes);
+    } else if (modeKey === "blinker") {
+      onDone(null);
     }
   };
 
@@ -249,12 +251,11 @@ export default function UnifiedModeModal({
   );
 
   const renderLaneMultiselectContent = () => {
-    const isVip = modeKey === "vip";
-    const accent = isVip ? colors.primary : AMBER_COLOR;
-    const iconName = isVip ? "shield-outline" : "flash-outline";
-    const bgLight = isVip ? "#FEE2E2" : "#FEF3C7";
-    const activeBg = isVip ? colors.primary + "0F" : AMBER_COLOR + "12";
-    const activeBorder = isVip ? colors.primary + "30" : AMBER_COLOR + "40";
+    const accent = colors.primary;
+    const iconName = "shield-outline";
+    const bgLight = "#FEE2E2";
+    const activeBg = colors.primary + "0F";
+    const activeBorder = colors.primary + "30";
 
     return (
       <View style={laneStyles.laneList}>
@@ -292,7 +293,7 @@ export default function UnifiedModeModal({
                     name={iconName}
                     size={16}
                     color={
-                      isSelected ? accent : isVip ? "#EF4444" : "#D97706"
+                      isSelected ? accent : "#EF4444"
                     }
                   />
                 </View>
@@ -323,6 +324,25 @@ export default function UnifiedModeModal({
     );
   };
 
+  const renderBlinkerContent = () => {
+    const warningBg = isDark ? "rgba(245, 158, 11, 0.08)" : "rgba(245, 158, 11, 0.05)";
+    const warningBorder = isDark ? "rgba(245, 158, 11, 0.2)" : "rgba(245, 158, 11, 0.15)";
+    
+    return (
+      <View style={[blinkerStyles.warningBox, { backgroundColor: warningBg, borderColor: warningBorder }]}>
+        <View style={[blinkerStyles.warningIconWrap, { backgroundColor: "rgba(245, 158, 11, 0.12)" }]}>
+          <Ionicons name="warning" size={28} color={AMBER_COLOR} />
+        </View>
+        <Text style={[blinkerStyles.warningText, { color: colors.subtext }]}>
+          {t("mode.blinkerModal.warningText", "Warning: Activating blinker mode will switch all signal lights at the junction to flash yellow warning signals. Typically used during night hours (9PM to 9AM) or low traffic volume periods.")}
+        </Text>
+        <Text style={[blinkerStyles.warningTitle, { color: colors.text }]}>
+          {t("mode.blinkerModal.warningTextConfirm", "Are you sure you want to proceed?")}
+        </Text>
+      </View>
+    );
+  };
+
   const dynamicDoneColor = modeKey === "blinker" ? AMBER_COLOR : colors.primary;
 
   return (
@@ -347,8 +367,8 @@ export default function UnifiedModeModal({
           {/* Render dynanic body based on modeKey */}
           {modeKey === "timeset" && renderTimesetContent()}
           {modeKey === "auto" && renderAutoContent()}
-          {(modeKey === "vip" || modeKey === "blinker") &&
-            renderLaneMultiselectContent()}
+          {modeKey === "vip" && renderLaneMultiselectContent()}
+          {modeKey === "blinker" && renderBlinkerContent()}
 
           {/* Standard buttons */}
           <View style={styles.modalButtonsRow}>
@@ -600,5 +620,35 @@ const multiselectStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FFFFFF",
+  },
+});
+
+const blinkerStyles = StyleSheet.create({
+  warningBox: {
+    borderRadius: 20,
+    borderWidth: 1.5,
+    padding: 18,
+    alignItems: "center",
+    marginBottom: hp(2.5),
+    gap: 12,
+  },
+  warningIconWrap: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  warningTitle: {
+    fontSize: 15,
+    fontFamily: theme.fontFamily["body-semibold"],
+    textAlign: "center",
+    marginTop: 4,
+  },
+  warningText: {
+    fontSize: 13,
+    fontFamily: theme.fontFamily.body,
+    textAlign: "center",
+    lineHeight: 19,
   },
 });

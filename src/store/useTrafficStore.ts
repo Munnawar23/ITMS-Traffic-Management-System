@@ -110,12 +110,11 @@ export const useTrafficStore = create<TrafficState>()(
             set({ selectedStrategy: strategy, currentMode: apiMode });
 
           } else if (uiMode === "blinker") {
-            const data = extraData || get().selectedBlinkerLanes;
             console.log(`[🚀 ZUSTAND STORE] Processing "blinker" mode. Activating Yellow Blinker...`);
             
             await switchModeApi("yellow");
             
-            set({ selectedBlinkerLanes: data, currentMode: "yellow" });
+            set({ currentMode: "yellow" });
 
           } else if (uiMode === "vip") {
             const data = extraData || get().selectedVipLanes;
