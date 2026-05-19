@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useTranslation } from "react-i18next";
 
 import TopIndicator from "@/components/common/TopIndicator";
 import { useAuthStore } from "@/store/authStore";
 import { useTrafficStore } from "@/store/useTrafficStore";
-import { formatDate } from "@/utils/dateUtils";
 import { useAppTheme } from "@/styles/theme";
+import { formatDate } from "@/utils/dateUtils";
 
 // Modular Screen Components
 import HeroBanner from "@/components/screens/home/HeroBanner";
@@ -24,11 +24,22 @@ export default function HomeScreen() {
   const initial = firstName.charAt(0).toUpperCase();
 
   // Retrieve active traffic light statuses and action logs from Zustand store
-  const { currentMode, inferenceHas, vipActive, vipLanesGreen, logs, fetchStatus, fetchLogs, error } = useTrafficStore();
+  const {
+    currentMode,
+    inferenceHas,
+    vipActive,
+    vipLanesGreen,
+    logs,
+    fetchStatus,
+    fetchLogs,
+    error,
+  } = useTrafficStore();
 
   // Fetch status and daily logs fresh when screen mounts
   useEffect(() => {
-    console.log(`[🏠 HOME SCREEN] Component mounted. Fetching initial hardware status & logs...`);
+    console.log(
+      `[🏠 HOME SCREEN] Component mounted. Fetching initial hardware status & logs...`,
+    );
     fetchStatus();
     fetchLogs();
   }, [fetchStatus, fetchLogs]);
@@ -80,7 +91,10 @@ export default function HomeScreen() {
   const { colors } = useAppTheme();
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={["top"]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+      edges={["top"]}
+    >
       <TopIndicator />
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -94,7 +108,7 @@ export default function HomeScreen() {
           <View style={styles.row}>
             <StatusCard
               label={t("home.junction")}
-              value="Fatehpura Circle"
+              value="200 Feet Road"
               icon="location"
               accentColor="#6C63FF"
               gradientColors={["#1E40AF", "#1D4ED8", "#6C63FF"]}
@@ -102,7 +116,11 @@ export default function HomeScreen() {
             <View style={{ width: 12 }} />
             <StatusCard
               label={t("home.status")}
-              value={error ? t("home.offline", "Offline") : t("home.running", "Online")}
+              value={
+                error
+                  ? t("home.offline", "Offline")
+                  : t("home.running", "Online")
+              }
               icon={error ? "cloud-offline-outline" : "pulse"}
               valueColor={error ? "#EF4444" : "#34D399"}
               accentColor={error ? "#EF4444" : "#34D399"}
@@ -122,7 +140,11 @@ export default function HomeScreen() {
             <View style={{ width: 12 }} />
             <StatusCard
               label="YOLO AI Detect"
-              value={inferenceHas ? t("home.active", "Active") : t("home.inactive", "Inactive")}
+              value={
+                inferenceHas
+                  ? t("home.active", "Active")
+                  : t("home.inactive", "Inactive")
+              }
               icon="eye-outline"
               valueColor={inferenceHas ? "#34D399" : "#9CA3AF"}
               accentColor={inferenceHas ? "#34D399" : "#9CA3AF"}
@@ -133,7 +155,10 @@ export default function HomeScreen() {
         </View>
 
         {/* Real-time native phone battery & emergency warning alert */}
-        <PhoneBatteryAlert vipActive={vipActive} vipLanesGreen={vipLanesGreen} />
+        <PhoneBatteryAlert
+          vipActive={vipActive}
+          vipLanesGreen={vipLanesGreen}
+        />
 
         {/* Dynamic Recent YOLO Action cycles feed */}
         <RecentActionsList logs={logs} />
