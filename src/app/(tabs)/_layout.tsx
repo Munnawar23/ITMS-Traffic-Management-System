@@ -9,7 +9,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function TabLayout() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const { colors } = useAppTheme();
+  const { colors, isDark } = useAppTheme();
+  const tabBgColor = isDark ? "#121B32" : "#F0F4F8";
 
   return (
     <Tabs
@@ -18,13 +19,19 @@ export default function TabLayout() {
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.subtext,
         tabBarStyle: {
-          borderTopWidth: 1,
-          borderTopColor: colors.border,
-          backgroundColor: colors.card,
+          borderTopWidth: 0,
+          backgroundColor: tabBgColor,
           height: 65 + insets.bottom,
           paddingBottom: insets.bottom > 0 ? insets.bottom - 4 : 10,
           paddingTop: 8,
-          ...styles.shadow,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: -4,
+          },
+          shadowOpacity: 0.08,
+          shadowRadius: 10,
+          elevation: 8,
         },
         tabBarLabelStyle: {
           fontFamily: theme.fontFamily["body-medium"],

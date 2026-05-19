@@ -105,7 +105,7 @@ export default function LoginScreen() {
               <Ionicons
                 name="shield-checkmark-outline"
                 size={14}
-                color="#10b981"
+                color={theme.colors.primary}
               />
               <Text style={styles.subtitleText}>{t("login.subtitle")}</Text>
             </View>

@@ -3,11 +3,12 @@ import { useRouter } from "expo-router";
 import LottieView from "lottie-react-native";
 import React, { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
-import { theme } from "@/styles/theme";
+import { theme, useAppTheme } from "@/styles/theme";
 
 export default function SplashScreen() {
   const router = useRouter();
   const token = useAuthStore((state) => state.token);
+  const { colors } = useAppTheme();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -24,7 +25,7 @@ export default function SplashScreen() {
   }, [token]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.primary }]}>
       <LottieView
         source={require("@/assets/animations/splash.json")}
         autoPlay

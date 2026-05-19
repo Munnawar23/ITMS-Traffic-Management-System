@@ -17,44 +17,44 @@ interface ProfileHeaderCardProps {
 }
 
 export default function ProfileHeaderCard({ user }: ProfileHeaderCardProps) {
-  const { isDark } = useAppTheme();
+  const { colors, isDark } = useAppTheme();
 
-  // Premium professional gradients based on theme mode
-  const gradientColors = isDark
-    ? (["#1E40AF", "#172554"] as const) // Deep indigo/blue for dark mode
-    : (["#3B82F6", "#1D4ED8"] as const); // Vibrant blue for light mode
+  // Cohesive Tech Blue style tokens matching the theme
+  const textColor = colors.text;
+  const subtextColor = colors.subtext;
+  const cardBorderColor = colors.border;
+  const glassBg = isDark ? "rgba(96, 165, 250, 0.05)" : "rgba(37, 99, 235, 0.03)";
+  const glassBorder = colors.border;
+  const avatarBorder = isDark ? "rgba(96, 165, 250, 0.15)" : "rgba(37, 99, 235, 0.1)";
+
+  const cardBgColor = isDark ? "#121B32" : "#F0F4F8";
 
   return (
-    <View style={styles.cardContainer}>
-      <LinearGradient
-        colors={gradientColors}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.gradientWrapper}
-      >
+    <View style={[styles.cardContainer, { borderColor: cardBorderColor, shadowColor: isDark ? "#000000" : "#2563EB" }]}>
+      <View style={[styles.gradientWrapper, { backgroundColor: cardBgColor }]}>
         {/* Subtle overlay for texture */}
         <View style={styles.patternOverlay} />
 
         <View style={styles.cardBody}>
-          {/* Avatar Area with Glassmorphism Ring */}
-          <View style={styles.avatarWrapper}>
+          {/* Avatar Area with Elegant Border Ring */}
+          <View style={[styles.avatarWrapper, { backgroundColor: avatarBorder }]}>
             <View style={styles.avatarInner}>
               {user?.profile_picture ? (
                 <Image source={{ uri: user.profile_picture }} style={styles.avatarImage} />
               ) : (
-                <Ionicons name="person" size={44} color={gradientColors[0]} />
+                <Ionicons name="person" size={44} color={textColor} />
               )}
             </View>
             {/* Active Status Indicator */}
-            <View style={styles.statusDot} />
+            <View style={[styles.statusDot, { borderColor: cardBgColor }]} />
           </View>
 
-          {/* Name and Role (White Text to pop on gradient) */}
-          <Text style={styles.userName} numberOfLines={1}>
+          {/* Name and Role */}
+          <Text style={[styles.userName, { color: textColor }]} numberOfLines={1}>
             {user?.name || "Jawan Name"}
           </Text>
-          <View style={styles.roleBadge}>
-            <Text style={styles.roleText} numberOfLines={1}>
+          <View style={[styles.roleBadge, { backgroundColor: glassBg, borderColor: glassBorder }]}>
+            <Text style={[styles.roleText, { color: textColor }]} numberOfLines={1}>
               {user?.role || "Jawan"}
             </Text>
           </View>
@@ -62,33 +62,33 @@ export default function ProfileHeaderCard({ user }: ProfileHeaderCardProps) {
           {/* Widgets Row (Glassmorphism Effect) */}
           <View style={styles.widgetsRow}>
             {/* Badge Widget */}
-            <View style={styles.widget}>
-              <View style={styles.widgetIconWrapper}>
-                <Ionicons name="shield-checkmark" size={18} color="#FFFFFF" />
+            <View style={[styles.widget, { backgroundColor: glassBg, borderColor: glassBorder }]}>
+              <View style={[styles.widgetIconWrapper, { backgroundColor: glassBg }]}>
+                <Ionicons name="shield-checkmark" size={18} color={textColor} />
               </View>
-              <Text style={styles.widgetLabel} numberOfLines={1}>
+              <Text style={[styles.widgetLabel, { color: subtextColor }]} numberOfLines={1}>
                 Badge No.
               </Text>
-              <Text style={styles.widgetValue} numberOfLines={1} adjustsFontSizeToFit>
+              <Text style={[styles.widgetValue, { color: textColor }]} numberOfLines={1} adjustsFontSizeToFit>
                 {user?.badgeNumber || "ITMS-9988"}
               </Text>
             </View>
 
             {/* Phone Widget */}
-            <View style={styles.widget}>
-              <View style={styles.widgetIconWrapper}>
-                <Ionicons name="call" size={18} color="#FFFFFF" />
+            <View style={[styles.widget, { backgroundColor: glassBg, borderColor: glassBorder }]}>
+              <View style={[styles.widgetIconWrapper, { backgroundColor: glassBg }]}>
+                <Ionicons name="call" size={18} color={textColor} />
               </View>
-              <Text style={styles.widgetLabel} numberOfLines={1}>
+              <Text style={[styles.widgetLabel, { color: subtextColor }]} numberOfLines={1}>
                 Contact
               </Text>
-              <Text style={styles.widgetValue} numberOfLines={1} adjustsFontSizeToFit>
+              <Text style={[styles.widgetValue, { color: textColor }]} numberOfLines={1} adjustsFontSizeToFit>
                 {user?.phone_number || "9999999999"}
               </Text>
             </View>
           </View>
         </View>
-      </LinearGradient>
+      </View>
     </View>
   );
 }
@@ -98,9 +98,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 20,
     borderRadius: 28,
-    shadowColor: "#3B82F6", // Tinted shadow matching the gradient vibe
+    borderWidth: 1,
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.1,
     shadowRadius: 16,
     elevation: 6, // Great for Android
   },
@@ -124,7 +124,6 @@ const styles = StyleSheet.create({
     height: 104,
     borderRadius: 52,
     padding: 4,
-    backgroundColor: "rgba(255, 255, 255, 0.25)", // Glass border
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 16,
@@ -151,20 +150,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#10B981", // Emerald green
     borderWidth: 3,
-    borderColor: "rgba(255, 255, 255, 0.5)", // Blends beautifully with glass border
   },
   userName: {
     fontSize: 26,
     fontFamily: theme.fontFamily.heading,
     marginBottom: 6,
     textAlign: "center",
-    color: "#FFFFFF",
   },
   roleBadge: {
     paddingHorizontal: 16,
     paddingVertical: 6,
     borderRadius: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    borderWidth: 1,
     marginBottom: 28,
   },
   roleText: {
@@ -172,7 +169,6 @@ const styles = StyleSheet.create({
     fontFamily: theme.fontFamily["body-semibold"],
     textTransform: "uppercase",
     letterSpacing: 0.5,
-    color: "#FFFFFF",
   },
   widgetsRow: {
     flexDirection: "row",
@@ -183,9 +179,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 20,
     padding: 16,
-    backgroundColor: "rgba(255, 255, 255, 0.12)", // Glassmorphism panel
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.2)",
     alignItems: "flex-start",
   },
   widgetIconWrapper: {
@@ -195,18 +189,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 12,
-    backgroundColor: "rgba(255, 255, 255, 0.15)",
   },
   widgetLabel: {
     fontSize: 12,
     fontFamily: theme.fontFamily["body-medium"],
     marginBottom: 4,
-    color: "rgba(255, 255, 255, 0.7)",
   },
   widgetValue: {
     fontSize: 16,
     fontFamily: theme.fontFamily["body-semibold"],
     width: "100%",
-    color: "#FFFFFF",
   },
 });

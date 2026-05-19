@@ -89,9 +89,6 @@ export default function HomeScreen() {
         {/* Welcome greeting card */}
         <HeroBanner firstName={firstName} initial={initial} dateStr={dateStr} />
 
-        {/* Real-time native phone battery & emergency warning alert */}
-        <PhoneBatteryAlert vipActive={vipActive} vipLanesGreen={vipLanesGreen} />
-
         {/* Live operational status cards */}
         <View style={styles.statsGrid}>
           <View style={styles.row}>
@@ -134,6 +131,9 @@ export default function HomeScreen() {
             />
           </View>
         </View>
+
+        {/* Real-time native phone battery & emergency warning alert */}
+        <PhoneBatteryAlert vipActive={vipActive} vipLanesGreen={vipLanesGreen} />
 
         {/* Dynamic Recent YOLO Action cycles feed */}
         <RecentActionsList logs={logs} />

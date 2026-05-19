@@ -2,23 +2,23 @@ import { useColorScheme } from "react-native";
 import { useThemeStore } from "@/store/useThemeStore";
 
 export const lightColors = {
-  background: "#F4F5F7",
+  background: "#F0F4F8",   // Cool slate-blue white background
   card: "#FFFFFF",
-  text: "#000000",
-  subtext: "#000000",
-  primary: "#1E40AF",
-  accent: "#6C63FF",
-  border: "#E2E8F0",
+  text: "#102A43",         // Deep navy professional text
+  subtext: "#486581",      // Cool slate-blue subtext
+  primary: "#2563EB",      // Vibrant Cobalt Blue primary
+  accent: "#3B82F6",       // Blue 500 accent
+  border: "#D9E2EC",       // Cool blue-gray border
 };
 
 export const darkColors = {
-  background: "#0F172A", // Soft gray-dark slate (Slate-900)
-  card: "#1E293B",       // Slate-800
-  text: "#FFFFFF",       // Clean high-contrast white text
-  subtext: "#FFFFFF",    // Clean high-contrast white subtext
-  primary: "#3B82F6",    // Soft indigo/blue accent for dark mode
-  accent: "#818CF8",     // Indigo-400
-  border: "#334155",     // Slate-700
+  background: "#070E20",  // Deep space midnight background
+  card: "#121B32",        // Clean midnight blue card
+  text: "#F0F4F8",        // Crisp cool-white text
+  subtext: "#829AB1",     // Light cool-silver subtext
+  primary: "#60A5FA",     // Sky blue primary for dark mode
+  accent: "#93C5FD",      // Soft blue accent
+  border: "#1D2A44",      // Midnight border
 };
 
 export const theme = {
