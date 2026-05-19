@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,6 +7,7 @@ import * as Haptics from "expo-haptics";
 import Toast from "react-native-toast-message";
 
 import TopIndicator from "@/components/common/TopIndicator";
+import ScreenHeader from "@/components/common/ScreenHeader";
 import ModeCard from "@/components/screens/mode/ModeCard";
 import UnifiedModeModal from "@/components/screens/mode/UnifiedModeModal";
 import ActiveModeStatus from "@/components/screens/mode/ActiveModeStatus";
@@ -40,14 +41,10 @@ export default function ModeScreen() {
     return "timeset"; // set_manual, manual, none default to timeset
   };
 
-  // 🔄 Real-time Background Polling: updates UI state every 5 seconds
+  // Fetch status fresh when screen mounts
   useEffect(() => {
+    console.log(`[📱 MODE SCREEN] Component mounted. Fetching initial hardware status...`);
     fetchStatus();
-    const interval = setInterval(() => {
-      fetchStatus();
-    }, 5000);
-
-    return () => clearInterval(interval);
   }, [fetchStatus]);
 
   const handleModeChange = async (key: ModeKey) => {
@@ -119,17 +116,12 @@ export default function ModeScreen() {
         contentContainerStyle={styles.scrollContent}
       >
         {/* ── Header ────────────────────────────────────────── */}
-        <View style={styles.header}>
-          <View style={styles.headerRow}>
-            <View>
-              <Text style={styles.headerTitle}>{t("mode.selectionTitle")}</Text>
-              <Text style={styles.headerSubtitle}>{t("mode.systemOnline")}</Text>
-            </View>
-            {isLoading && (
-              <ActivityIndicator size="small" color={theme.colors.accent} style={styles.loader} />
-            )}
-          </View>
-        </View>
+        <ScreenHeader
+          title={t("mode.selectionTitle")}
+          subtitle={t("mode.systemOnline")}
+          onRefresh={fetchStatus}
+          isLoading={isLoading}
+        />
 
         {/* ── Section Header ───────────────────────────────── */}
         <View style={styles.sectionHeader}>
@@ -183,31 +175,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  header: {
-    paddingHorizontal: wp(5),
-    paddingTop: hp(2.5),
-    paddingBottom: hp(1.5),
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  headerTitle: {
-    fontSize: 26,
-    fontFamily: theme.fontFamily["body-semibold"],
-    color: theme.colors.text,
-    letterSpacing: -0.5,
-  },
-  headerSubtitle: {
-    fontSize: 13,
-    fontFamily: theme.fontFamily.body,
-    color: "#64748B",
-    marginTop: 2,
-  },
-  loader: {
-    marginRight: wp(2),
-  },
+
   scrollContent: {
     paddingBottom: hp(4),
   },
@@ -254,5 +222,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(4),
     rowGap: wp(3.5),
   },
+
 });
 

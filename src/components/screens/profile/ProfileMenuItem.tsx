@@ -1,27 +1,35 @@
-import { theme } from "@/styles/theme";
-import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
+import { theme } from "@/styles/theme";
 
 interface ProfileMenuItemProps {
-  icon: any;
+  icon: keyof typeof Ionicons.glyphMap;
   title: string;
   onPress?: () => void;
   showBorder?: boolean;
   rightElement?: React.ReactNode;
 }
 
-const ProfileMenuItem: React.FC<ProfileMenuItemProps> = ({
+export default function ProfileMenuItem({
   icon,
   title,
   onPress,
   showBorder = true,
   rightElement,
-}) => {
+}: ProfileMenuItemProps) {
+  const handlePress = () => {
+    if (onPress) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      onPress();
+    }
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.7}
-      onPress={onPress}
+      onPress={onPress ? handlePress : undefined}
       disabled={!onPress}
       style={[styles.container, showBorder && styles.border]}
     >
@@ -38,7 +46,7 @@ const ProfileMenuItem: React.FC<ProfileMenuItemProps> = ({
       )}
     </TouchableOpacity>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -70,5 +78,3 @@ const styles = StyleSheet.create({
     color: "#000000",
   },
 });
-
-export default ProfileMenuItem;

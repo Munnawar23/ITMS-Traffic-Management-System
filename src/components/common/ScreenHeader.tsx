@@ -1,119 +1,101 @@
-import { theme } from "@/styles/theme";
-import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
+import { theme } from "@/styles/theme";
+import { wp, hp } from "@/helpers";
 
 interface ScreenHeaderProps {
   title: string;
   subtitle?: string;
-  onSearchPress?: () => void;
-  onRefresh?: () => void;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
-  showBorder?: boolean;
+  onRefresh?: () => void | Promise<void>;
+  isLoading?: boolean;
 }
 
-const ScreenHeader: React.FC<ScreenHeaderProps> = ({
+export default function ScreenHeader({
   title,
   subtitle,
-  onSearchPress,
   onRefresh,
-  leftIcon,
-  rightIcon,
-  showBorder = false,
-}) => {
+  isLoading = false,
+}: ScreenHeaderProps) {
+  const handleRefresh = async () => {
+    if (onRefresh) {
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      await onRefresh();
+    }
+  };
+
   return (
-    <View style={[styles.header, showBorder && styles.border]}>
+    <View style={styles.header}>
       <View style={styles.headerRow}>
-        {leftIcon && <View style={styles.leftIconContainer}>{leftIcon}</View>}
-        <View style={styles.headerContent}>
-          <Text style={styles.title} numberOfLines={1}>
-            {title}
-          </Text>
-          {subtitle && (
-            <Text style={styles.subtitle} numberOfLines={1}>
-              {subtitle}
-            </Text>
-          )}
+        <View style={styles.titleContainer}>
+          <Text style={styles.headerTitle} numberOfLines={1}>{title}</Text>
         </View>
-        <View style={styles.actionButtons}>
-          {rightIcon && (
-            <View style={styles.rightIconContainer}>{rightIcon}</View>
-          )}
-          {onRefresh && (
-            <TouchableOpacity style={styles.iconButton} onPress={onRefresh}>
-              <Ionicons
-                name="refresh-outline"
-                size={24}
-                color={theme.colors.primary}
-              />
-            </TouchableOpacity>
-          )}
-          {onSearchPress && (
-            <TouchableOpacity style={styles.iconButton} onPress={onSearchPress}>
-              <Ionicons
-                name="search-outline"
-                size={24}
-                color={theme.colors.primary}
-              />
-            </TouchableOpacity>
-          )}
-        </View>
+
+        {onRefresh && (
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={handleRefresh}
+            disabled={isLoading}
+            style={styles.refreshButton}
+          >
+            {isLoading ? (
+              <ActivityIndicator size="small" color={theme.colors.primary} />
+            ) : (
+              <Ionicons name="refresh-outline" size={22} color={theme.colors.primary} />
+            )}
+          </TouchableOpacity>
+        )}
       </View>
+
+      {subtitle && (
+        <Text style={styles.headerSubtitle} numberOfLines={1}>{subtitle}</Text>
+      )}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   header: {
-    paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: 12,
+    paddingHorizontal: wp(5),
+    paddingTop: hp(1.5), // Shunted a little bit up!
+    paddingBottom: hp(0.8), // Tighter bottom padding
     backgroundColor: theme.colors.background,
-  },
-  border: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#F3F4F6",
   },
   headerRow: {
     flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
   },
-  leftIconContainer: {
-    marginRight: 12,
-  },
-  headerContent: {
+  titleContainer: {
     flex: 1,
+    marginRight: 16,
   },
-  title: {
-    fontSize: 18,
-    fontFamily: theme.fontFamily.heading,
-    color: "#000000",
+  headerTitle: {
+    fontSize: 26,
+    fontFamily: theme.fontFamily["body-semibold"],
+    color: theme.colors.text,
+    letterSpacing: -0.5,
   },
-  subtitle: {
+  headerSubtitle: {
     fontSize: 13,
-    fontFamily: theme.fontFamily["body-medium"],
-    color: "#000000",
-    marginTop: 2,
+    fontFamily: theme.fontFamily.body,
+    color: "#64748B",
+    marginTop: 4, // Perfect separation spacing
   },
-  actionButtons: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  rightIconContainer: {
-    marginLeft: 12,
-  },
-  iconButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    backgroundColor: "#F9FAFB",
+  refreshButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 12, // Beautiful rounded square background!
+    backgroundColor: "#FFFFFF",
     alignItems: "center",
     justifyContent: "center",
-    marginLeft: 12,
     borderWidth: 1,
-    borderColor: "#F3F4F6",
+    borderColor: "#E2E8F0",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
   },
 });
-
-export default ScreenHeader;

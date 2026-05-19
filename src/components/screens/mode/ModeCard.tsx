@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import * as Haptics from "expo-haptics";
 import { ModeOption } from "@/constants";
 import { theme } from "@/styles/theme";
 import { wp, hp } from "@/helpers";
@@ -23,10 +24,15 @@ export default function ModeCard({
   onPress,
   disabled = false,
 }: ModeCardProps) {
+  const handlePress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    onPress();
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      onPress={onPress}
+      onPress={handlePress}
       disabled={disabled}
       style={[
         styles.modeCard,

@@ -1,18 +1,11 @@
 import axios from "axios";
-
-// Base URL for the GEM intelligent traffic light system
-// Production: https://api.itmso.in
-// Local debug: http://localhost:5000
-const BASE_URL = "https://api.itmso.in";
-
-// Plaintext API Key to authorize with Cloudflare / Raspberry Pi
-const API_KEY = "open-me-098-i-am-open-098-ASD-hello-150";
+import { Config } from "@/config";
 
 export const apiClient = axios.create({
-  baseURL: BASE_URL,
+  baseURL: Config.apiUrl,
   headers: {
     "Content-Type": "application/json",
-    "X-API-KEY": API_KEY,
+    "X-API-KEY": Config.apiKey,
   },
   timeout: 10000, // 10 second timeout for hardware responses
 });
