@@ -1,6 +1,5 @@
 import { theme, useAppTheme } from "@/styles/theme";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -10,7 +9,7 @@ interface StatusCardProps {
   icon: any;
   valueColor?: string;
   accentColor?: string;
-  gradientColors?: readonly [string, string, ...string[]];
+  gradientColors?: readonly [string, string, ...string[]]; // Unused but kept for prop compatibility
   isPulsing?: boolean;
 }
 
@@ -20,107 +19,86 @@ const StatusCard: React.FC<StatusCardProps> = ({
   icon,
   valueColor,
   accentColor,
-  gradientColors,
   isPulsing = false,
 }) => {
-  const { colors: appColors } = useAppTheme();
+  const { colors } = useAppTheme();
 
-  const finalValueColor = valueColor ?? "#FFFFFF";
-  const finalAccentColor = accentColor ?? appColors.accent;
-
-  const defaultGradient: readonly [string, string] = [
-    appColors.primary + "CC",
-    appColors.background === "#0F172A" ? "#1E293BCC" : "#0F2463CC",
-  ];
-  const colors = gradientColors ?? defaultGradient;
+  const finalAccentColor = accentColor ?? colors.primary;
+  const finalValueColor = valueColor ?? colors.text;
 
   return (
-    <View style={styles.wrapper}>
-      <LinearGradient
-        colors={colors}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.gradient}
-      >
-        {/* Icon badge top-left */}
-        <View style={[styles.iconBadge, { backgroundColor: finalAccentColor + "28" }]}>
-          <Ionicons name={icon} size={17} color={finalAccentColor} />
+    <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
+      <View style={styles.topRow}>
+        <View style={[styles.iconBox, { backgroundColor: finalAccentColor + "15" }]}>
+          <Ionicons name={icon} size={20} color={finalAccentColor} />
         </View>
+        {isPulsing && (
+          <View style={[styles.pulseDot, { backgroundColor: finalAccentColor }]} />
+        )}
+      </View>
 
-        {/* Label */}
-        <Text style={styles.label} numberOfLines={1}>
+      <View style={styles.bottomRow}>
+        <Text style={[styles.label, { color: colors.subtext }]} numberOfLines={1}>
           {label}
         </Text>
-
-        {/* Value row */}
-        <View style={styles.valueRow}>
-          <Text
-            style={[styles.value, { color: finalValueColor }]}
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            minimumFontScale={0.7}
-          >
-            {value}
-          </Text>
-          {isPulsing && (
-            <View style={[styles.pulseDot, { backgroundColor: finalAccentColor }]} />
-          )}
-        </View>
-      </LinearGradient>
+        <Text
+          style={[styles.value, { color: finalValueColor }]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.7}
+        >
+          {value}
+        </Text>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  wrapper: {
+  card: {
     flex: 1,
-    borderRadius: 20,
-    overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.22,
-    shadowRadius: 12,
-    elevation: 8,
-  },
-  gradient: {
+    borderRadius: 24,
     padding: 16,
-    minHeight: 110,
-    justifyContent: "space-between",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.08)",
-    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.04,
+    shadowRadius: 10,
+    elevation: 2,
+    minHeight: 120,
+    justifyContent: "space-between",
   },
-  iconBadge: {
-    width: 36,
-    height: 36,
-    borderRadius: 11,
+  topRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
+  iconBox: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 10,
+  },
+  pulseDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginTop: 6,
+  },
+  bottomRow: {
+    marginTop: 16,
   },
   label: {
     fontSize: 12,
     fontFamily: theme.fontFamily["body-medium"],
-    color: "#FFFFFF",
     textTransform: "uppercase",
-    letterSpacing: 1.1,
+    letterSpacing: 0.5,
     marginBottom: 4,
-  },
-  valueRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
   },
   value: {
     fontSize: 18,
-    fontFamily: theme.fontFamily["body-semibold"],
-    color: "#FFFFFF",
-    flex: 1,
-  },
-  pulseDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    fontFamily: theme.fontFamily.heading,
   },
 });
 

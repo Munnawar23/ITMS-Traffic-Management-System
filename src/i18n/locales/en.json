@@ -26,6 +26,8 @@
     }
   },
   "activity": {
+    "title": "Signal Activity Logs",
+    "subtitle": "Historical cycles from GEM controller",
     "noActivity": "No Recent Activity",
     "noActivityDesc": "Your traffic management activities will appear here."
   },
@@ -44,7 +46,18 @@
     "running": "Running",
     "yellow": "Yellow",
     "lowBattery": "Low Battery Backup",
-    "batteryDesc": "Battery at 39% — Consider charging soon"
+    "batteryDesc": "Battery at 39% — Consider charging soon",
+    "critical": "CRITICAL",
+    "batteryLow": "BATTERY LOW",
+    "systemOk": "SYSTEM OK",
+    "vipOverrideActive": "🚨 VIP OVERRIDE ACTIVE",
+    "phoneBatteryLow": "⚠️ PHONE BATTERY LOW",
+    "batteryHealthy": "🔋 BATTERY HEALTHY",
+    "forcingGreenLight": "Forcing green light",
+    "none": "None",
+    "deviceCharging": "Device is plugged in and charging.",
+    "connectChargerSoon": "Connect charger soon to keep tracking.",
+    "batteryChargedHealthy": "Phone battery is charged and healthy."
   },
   "tabs": {
     "home": "Home",

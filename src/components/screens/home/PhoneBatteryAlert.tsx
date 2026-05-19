@@ -6,29 +6,6 @@ import * as Battery from "expo-battery";
 import { useTranslation } from "react-i18next";
 import { theme, useAppTheme } from "@/styles/theme";
 
-interface SectionHeaderProps {
-  title: string;
-  badgeLabel?: string;
-  badgeIcon?: keyof typeof Ionicons.glyphMap;
-  badgeColor?: string;
-  badgeBg?: string;
-}
-
-function SectionHeader({ title, badgeLabel, badgeIcon, badgeColor, badgeBg }: SectionHeaderProps) {
-  const { colors } = useAppTheme();
-  return (
-    <View style={styles.sectionHeader}>
-      <Text style={[styles.sectionTitle, { color: colors.text }]}>{title}</Text>
-      {badgeLabel ? (
-        <View style={[styles.sectionBadge, { backgroundColor: badgeBg }]}>
-          {badgeIcon && <Ionicons name={badgeIcon} size={11} color={badgeColor} style={{ marginRight: 3 }} />}
-          <Text style={[styles.sectionBadgeText, { color: badgeColor }]}>{badgeLabel}</Text>
-        </View>
-      ) : null}
-    </View>
-  );
-}
-
 interface PhoneBatteryAlertProps {
   vipActive: boolean;
   vipLanesGreen: string[] | null;
@@ -36,212 +13,170 @@ interface PhoneBatteryAlertProps {
 
 export default function PhoneBatteryAlert({ vipActive, vipLanesGreen }: PhoneBatteryAlertProps) {
   const { t } = useTranslation();
+  const { colors, isDark } = useAppTheme();
   const [phoneBatteryLevel, setPhoneBatteryLevel] = useState<number>(0.85); // Fallback to 85%
   const [phoneBatteryCharging, setPhoneBatteryCharging] = useState<boolean>(false);
 
   useEffect(() => {
     let subscription: Battery.Subscription | null = null;
-
     async function initPhoneBattery() {
       try {
         const level = await Battery.getBatteryLevelAsync();
         const state = await Battery.getBatteryStateAsync();
         setPhoneBatteryLevel(level >= 0 ? level : 0.85);
         setPhoneBatteryCharging(state === Battery.BatteryState.CHARGING || state === Battery.BatteryState.FULL);
-
         subscription = Battery.addBatteryLevelListener(({ batteryLevel }) => {
           setPhoneBatteryLevel(batteryLevel);
         });
-      } catch (err) {
-        console.warn("[🔋 PhoneBatteryAlert] Failed to initialize phone battery level async:", err);
-      }
+      } catch (err) {}
     }
-
     initPhoneBattery();
-
-    return () => {
-      if (subscription) {
-        subscription.remove();
-      }
-    };
+    return () => subscription?.remove();
   }, []);
 
-  return (
-    <View>
-      <SectionHeader
-        title={t("home.systemAlerts")}
-        badgeLabel={vipActive ? "CRITICAL" : (phoneBatteryLevel < 0.25 ? "BATTERY LOW" : "SYSTEM OK")}
-        badgeIcon={vipActive ? "warning" : (phoneBatteryLevel < 0.25 ? "battery-dead" : "checkmark-circle")}
-        badgeColor={vipActive ? "#EF4444" : (phoneBatteryLevel < 0.25 ? "#D97706" : "#10B981")}
-        badgeBg={vipActive ? "#EF444420" : (phoneBatteryLevel < 0.25 ? "#FBBF2420" : "#10B98120")}
-      />
+  const isLow = phoneBatteryLevel < 0.25;
 
-      <View style={styles.alertWrap}>
-        <LinearGradient
-          colors={vipActive ? ["#991B1B", "#DC2626", "#EF4444"] : ["#1E40AF", "#1D4ED8", "#6C63FF"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.alertGrad}
-        >
-          {/* Left accent bar */}
-          <View style={[
-            styles.alertAccentBar, 
-            vipActive && { backgroundColor: "#EF4444" }, 
-            !vipActive && { backgroundColor: phoneBatteryLevel < 0.25 ? "#FBBF24" : "#10B981" }
-          ]} />
-
-          <View style={styles.alertBody}>
-            <View style={styles.alertIconBadge}>
+  // Render Premium Normal Card
+  if (!vipActive) {
+    return (
+      <View style={styles.container}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>{t("home.systemAlerts")}</Text>
+        <View style={[styles.normalCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+          <View style={styles.cardHeader}>
+            <View style={[styles.iconCircle, { backgroundColor: isDark ? "#ffffff08" : "#f1f5f9" }]}>
               <Ionicons 
-                name={vipActive ? "shield-checkmark" : (phoneBatteryCharging ? "battery-charging" : "battery-full")} 
+                name={phoneBatteryCharging ? "battery-charging" : (isLow ? "battery-dead" : "battery-full")} 
                 size={22} 
-                color={vipActive ? "#FFFFFF" : (phoneBatteryLevel < 0.25 ? "#FBBF24" : "#34D399")} 
+                color={isLow ? "#F59E0B" : "#10B981"} 
               />
             </View>
-
-            <View style={styles.alertText}>
-              <Text style={styles.alertTitle}>
-                {vipActive 
-                  ? "🚨 VIP OVERRIDE ACTIVE" 
-                  : (phoneBatteryLevel < 0.25 ? "⚠️ PHONE BATTERY LOW" : "🔋 BATTERY HEALTHY")}
+            <View style={styles.textContainer}>
+              <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
+                {isLow ? t("home.phoneBatteryLow") : t("home.batteryHealthy")}
               </Text>
-              <Text style={styles.alertSub}>
-                {vipActive 
-                  ? `Forcing green light: ${vipLanesGreen && vipLanesGreen.length > 0 ? vipLanesGreen.map(l => `L${l === "81" ? "1" : l === "82" ? "2" : l === "83" ? "3" : "4"}`).join(", ") : "None"}`
-                  : (phoneBatteryCharging 
-                      ? "Device is plugged in and charging." 
-                      : (phoneBatteryLevel < 0.25 
-                          ? "Connect charger soon to keep tracking." 
-                          : "Phone battery is charged and healthy."))}
+              <Text style={[styles.subtitle, { color: colors.subtext }]} numberOfLines={1}>
+                {phoneBatteryCharging 
+                  ? t("home.deviceCharging") 
+                  : (isLow ? t("home.connectChargerSoon") : t("home.batteryChargedHealthy"))}
               </Text>
             </View>
-
-            <View style={[
-              styles.alertBadge, 
-              vipActive && { backgroundColor: "#EF4444" }, 
-              !vipActive && { backgroundColor: phoneBatteryLevel < 0.25 ? "rgba(251,191,36,0.2)" : "rgba(52,211,153,0.2)" }
-            ]}>
-              <Text style={[
-                styles.alertBadgeText, 
-                vipActive && { color: "#FFFFFF" }, 
-                !vipActive && { color: phoneBatteryLevel < 0.25 ? "#FBBF24" : "#34D399" }
-              ]}>
-                {vipActive ? "VIP" : `${Math.round(phoneBatteryLevel * 100)}%`}
+            <View style={[styles.badge, { backgroundColor: (isLow ? "#F59E0B" : "#10B981") + "15" }]}>
+              <Text style={[styles.badgeText, { color: isLow ? "#F59E0B" : "#10B981" }]}>
+                {Math.round(phoneBatteryLevel * 100)}%
               </Text>
             </View>
           </View>
-
-          {/* Progress bar */}
-          <View style={styles.progressBg}>
-            <LinearGradient
-              colors={vipActive ? ["#EF4444", "#F87171"] : (phoneBatteryLevel < 0.25 ? ["#F59E0B", "#FBBF24"] : ["#10B981", "#34D399"])}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={[styles.progressFill, { width: `${vipActive ? 100 : Math.round(phoneBatteryLevel * 100)}%` as any }]}
-            />
-          </View>
-        </LinearGradient>
+        </View>
       </View>
+    );
+  }
+
+  // Render VIP Emergency Red Gradient Card
+  return (
+    <View style={styles.container}>
+      <Text style={[styles.sectionTitle, { color: colors.text }]}>{t("home.systemAlerts")}</Text>
+      <LinearGradient
+        colors={["#DC2626", "#991B1B"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.vipCard}
+      >
+        <View style={styles.cardHeader}>
+          <View style={[styles.iconCircle, { backgroundColor: "rgba(255,255,255,0.2)" }]}>
+            <Ionicons name="shield-checkmark" size={22} color="#FFFFFF" />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={[styles.title, { color: "#FFFFFF" }]} numberOfLines={1}>
+              {t("home.vipOverrideActive")}
+            </Text>
+            <Text style={[styles.subtitle, { color: "rgba(255,255,255,0.8)" }]} numberOfLines={1}>
+              {`${t("home.forcingGreenLight")}: ${vipLanesGreen && vipLanesGreen.length > 0 ? vipLanesGreen.map(l => `L${l === "81" ? "1" : l === "82" ? "2" : l === "83" ? "3" : "4"}`).join(", ") : t("home.none")}`}
+            </Text>
+          </View>
+          <View style={[styles.badge, { backgroundColor: "rgba(255,255,255,0.2)" }]}>
+            <Text style={[styles.badgeText, { color: "#FFFFFF" }]}>VIP</Text>
+          </View>
+        </View>
+        <View style={styles.progressTrack}>
+           <View style={[styles.progressFill, { width: "100%", backgroundColor: "#FFFFFF" }]} />
+        </View>
+      </LinearGradient>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginHorizontal: 16,
-    marginTop: 20,
-    marginBottom: 12,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontFamily: theme.fontFamily.heading,
-    color: theme.colors.text,
-    letterSpacing: 0.3,
-  },
-  sectionBadge: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
-  },
-  sectionBadgeText: {
-    fontSize: 11,
-    fontFamily: theme.fontFamily["body-semibold"],
-  },
-  alertWrap: {
-    marginHorizontal: 16,
-    borderRadius: 22,
-    overflow: "hidden",
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
-    marginBottom: 6,
-  },
-  alertGrad: {
-    paddingHorizontal: 18,
-    paddingTop: 18,
-    position: "relative",
-  },
-  alertAccentBar: {
-    position: "absolute",
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: 4,
-  },
-  alertBody: {
-    flexDirection: "row",
-    alignItems: "flex-start", // Top align items so long text doesn't center them awkwardly
+  container: {
     marginBottom: 16,
   },
-  alertIconBadge: {
+  sectionTitle: {
+    fontSize: 14,
+    fontFamily: theme.fontFamily["body-semibold"],
+    textTransform: "uppercase",
+    letterSpacing: 1.2,
+    marginHorizontal: 20,
+    marginBottom: 12,
+  },
+  normalCard: {
+    marginHorizontal: 16,
+    borderRadius: 24,
+    borderWidth: 1,
+    padding: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.04,
+    shadowRadius: 10,
+    elevation: 2,
+  },
+  vipCard: {
+    marginHorizontal: 16,
+    borderRadius: 24,
+    padding: 16,
+    shadowColor: "#DC2626",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 6,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  iconCircle: {
     width: 44,
     height: 44,
     borderRadius: 14,
-    backgroundColor: "rgba(255,255,255,0.08)",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 12,
-    marginTop: 2, // Slight top offset to match first line of text
+    marginRight: 14,
   },
-  alertText: {
+  textContainer: {
     flex: 1,
-    marginRight: 12, // Safe horizontal margin to prevent any overlap with the right badge
+    marginRight: 10,
   },
-  alertTitle: {
-    fontSize: 17, // One size bigger title
+  title: {
+    fontSize: 15,
     fontFamily: theme.fontFamily["body-semibold"],
-    color: "#FFFFFF",
-    marginBottom: 4,
+    marginBottom: 2,
   },
-  alertSub: {
-    fontSize: 13, // One size bigger description
+  subtitle: {
+    fontSize: 13,
     fontFamily: theme.fontFamily.body,
-    color: "#FFFFFF", // Solid white, full opacity!
-    lineHeight: 18, // Breathing room
   },
-  alertBadge: {
+  badge: {
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 10,
-    marginTop: 2, // Matches top of circular badge
   },
-  alertBadgeText: {
-    fontSize: 18, // Bigger badge text
-    fontFamily: theme.fontFamily.heading,
+  badgeText: {
+    fontSize: 13,
+    fontFamily: theme.fontFamily["body-semibold"],
   },
-  progressBg: {
+  progressTrack: {
     height: 4,
-    backgroundColor: "rgba(255,255,255,0.06)",
-    marginHorizontal: 16,
-    marginBottom: 16,
+    backgroundColor: "rgba(255,255,255,0.2)",
     borderRadius: 2,
+    marginTop: 16,
     overflow: "hidden",
   },
   progressFill: {

@@ -26,6 +26,8 @@
     }
   },
   "activity": {
+    "title": "सिग्नल गतिविधि लॉग",
+    "subtitle": "GEM नियंत्रक से ऐतिहासिक चक्र",
     "noActivity": "कोई हालिया गतिविधि नहीं",
     "noActivityDesc": "आपकी यातायात प्रबंधन गतिविधियाँ यहाँ दिखाई देंगी।"
   },
@@ -44,7 +46,18 @@
     "running": "चल रहा है",
     "yellow": "पीला",
     "lowBattery": "लो बैटरी बैकअप",
-    "batteryDesc": "बैटरी 39% पर है - कृपया जल्द चार्ज करें"
+    "batteryDesc": "बैटरी 39% पर है - कृपया जल्द चार्ज करें",
+    "critical": "महत्वपूर्ण",
+    "batteryLow": "बैटरी कम",
+    "systemOk": "सिस्टम ठीक है",
+    "vipOverrideActive": "🚨 वीआईपी ओवरराइड सक्रिय",
+    "phoneBatteryLow": "⚠️ फोन की बैटरी कम",
+    "batteryHealthy": "🔋 बैटरी स्वस्थ",
+    "forcingGreenLight": "हरी बत्ती को बाध्य कर रहा है",
+    "none": "कोई नहीं",
+    "deviceCharging": "डिवाइस प्लग इन है और चार्ज हो रहा है।",
+    "connectChargerSoon": "ट्रैकिंग जारी रखने के लिए जल्द ही चार्जर कनेक्ट करें।",
+    "batteryChargedHealthy": "फोन की बैटरी चार्ज और स्वस्थ है।"
   },
   "tabs": {
     "home": "होम",
