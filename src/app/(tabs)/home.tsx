@@ -5,9 +5,10 @@ import { theme } from "@/styles/theme";
 import { formatDate, getGreeting } from "@/utils/dateUtils";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useTrafficStore } from "@/store/useTrafficStore";
 import { useTranslation } from "react-i18next";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -16,6 +17,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as Battery from "expo-battery";
 
 /* ─────────────────────────────────────────────────────── */
 /*  Small animated section wrapper (Keep for Hero)        */
@@ -126,32 +128,122 @@ export default function HomeScreen() {
   const firstName = user?.name?.split(" ")[0] ?? "Jawan";
   const initial = firstName.charAt(0).toUpperCase();
 
-  const recentActions = [
-    {
-      id: "1",
-      time: "9:41 AM",
-      desc: "Switched from Circle_auto → Circle_man",
-      icon: "swap-horizontal" as const,
-    },
-    {
-      id: "2",
-      time: "3:23 PM",
-      desc: "Signal timing adjusted for Circle_auto",
-      icon: "timer-outline" as const,
-    },
-    {
-      id: "3",
-      time: "9:28 AM",
-      desc: "Emergency override active → Circle_auto",
-      icon: "warning-outline" as const,
-    },
-    {
-      id: "4",
-      time: "9:03 AM",
-      desc: "Switched from Circle_man → Circle_auto",
-      icon: "swap-horizontal" as const,
-    },
-  ];
+  // Retrieve active traffic light statuses from Zustand store
+  const { currentMode, inferenceHas, vipActive, vipLanesGreen, logs, fetchStatus, fetchLogs, error } = useTrafficStore();
+
+  // Real phone battery status states
+  const [phoneBatteryLevel, setPhoneBatteryLevel] = useState<number>(0.85); // Fallback to 85%
+  const [phoneBatteryCharging, setPhoneBatteryCharging] = useState<boolean>(false);
+
+  useEffect(() => {
+    let subscription: Battery.Subscription | null = null;
+
+    async function initPhoneBattery() {
+      try {
+        const level = await Battery.getBatteryLevelAsync();
+        const state = await Battery.getBatteryStateAsync();
+        setPhoneBatteryLevel(level >= 0 ? level : 0.85);
+        setPhoneBatteryCharging(state === Battery.BatteryState.CHARGING || state === Battery.BatteryState.FULL);
+
+        subscription = Battery.addBatteryLevelListener(({ batteryLevel }) => {
+          setPhoneBatteryLevel(batteryLevel);
+        });
+      } catch (err) {
+        console.warn("[🏠 HOME SCREEN] Failed to initialize phone battery level async:", err);
+      }
+    }
+
+    initPhoneBattery();
+
+    return () => {
+      if (subscription) {
+        subscription.remove();
+      }
+    };
+  }, []);
+
+  // Poll status and fetch logs when screen is mounted
+  useEffect(() => {
+    console.log(`[🏠 HOME SCREEN] Component mounted. Running initial hardware status check & fetching daily logs...`);
+    fetchStatus();
+    fetchLogs();
+    const interval = setInterval(() => {
+      console.log(`[🏠 HOME SCREEN] ⏱️ 5-second polling interval triggered. Syncing RPi5 state...`);
+      fetchStatus();
+    }, 5000);
+    return () => {
+      console.log(`[🏠 HOME SCREEN] Component unmounting. Stopping background polling interval.`);
+      clearInterval(interval);
+    };
+  }, [fetchStatus, fetchLogs]);
+
+  // Helper to translate active API mode to visual labels, icons, and colors
+  const getModeDetails = () => {
+    switch (currentMode) {
+      case "auto":
+        return {
+          value: t("mode.auto", "AI Jump"),
+          icon: "hardware-chip-outline" as const,
+          color: "#34D399",
+        };
+      case "cycle_auto":
+        return {
+          value: t("mode.cycle_auto", "AI Cycle"),
+          icon: "sync-outline" as const,
+          color: "#10B981",
+        };
+      case "set_manual":
+      case "manual":
+        return {
+          value: t("mode.timeset", "Scheduled"),
+          icon: "time-outline" as const,
+          color: "#818CF8",
+        };
+      case "yellow":
+        return {
+          value: t("mode.blinker", "Blinker"),
+          icon: "flash-outline" as const,
+          color: "#FBBF24",
+        };
+      case "vip":
+        return {
+          value: t("mode.vip", "VIP Priority"),
+          icon: "shield-checkmark-outline" as const,
+          color: "#F87171",
+        };
+      default:
+        return {
+          value: t("mode.none", "Offline"),
+          icon: "cloud-offline-outline" as const,
+          color: "#9CA3AF",
+        };
+    }
+  };
+
+  const modeInfo = getModeDetails();
+
+  // Map live RPi5 database logs to dashboard action items
+  const recentActions = [...logs]
+    .reverse() // Sort newest first
+    .slice(0, 4) // Limit to the most recent 4 cycles
+    .map((item, idx) => {
+      const laneNum = item.lane === "81" ? "1" : item.lane === "82" ? "2" : item.lane === "83" ? "3" : "4";
+      const vehicleDesc = item.total_vehicles > 0 
+        ? `${item.total_vehicles} vehicles detected` 
+        : `No vehicles detected`;
+      
+      let iconName: keyof typeof Ionicons.glyphMap = "sync-outline";
+      if (item.mode === "vip") iconName = "shield-checkmark-outline";
+      if (item.mode === "yellow") iconName = "flash-outline";
+      if (item.mode === "set_manual" || item.mode === "manual") iconName = "time-outline";
+
+      return {
+        id: `live_${idx}_${item.time}`,
+        time: item.time.substring(0, 5), // Format HH:MM
+        desc: `Lane ${laneNum} Green for ${item.green_duration}s (${vehicleDesc})`,
+        icon: iconName,
+      };
+    });
 
   const renderHeader = () => (
     <View>
@@ -210,44 +302,62 @@ export default function HomeScreen() {
       {/* ── System Alert ─────────────────────────────────── */}
       <SectionHeader
         title={t("home.systemAlerts")}
-        badgeLabel={t("home.oneAlert")}
-        badgeIcon="alert-circle"
-        badgeColor="#D97706"
-        badgeBg="#FBBF2420"
+        badgeLabel={vipActive ? "CRITICAL" : (phoneBatteryLevel < 0.25 ? "BATTERY LOW" : "SYSTEM OK")}
+        badgeIcon={vipActive ? "warning" : (phoneBatteryLevel < 0.25 ? "battery-dead" : "checkmark-circle")}
+        badgeColor={vipActive ? "#EF4444" : (phoneBatteryLevel < 0.25 ? "#D97706" : "#10B981")}
+        badgeBg={vipActive ? "#EF444420" : (phoneBatteryLevel < 0.25 ? "#FBBF2420" : "#10B98120")}
       />
 
       <View style={styles.alertWrap}>
         <LinearGradient
-          colors={["#1E40AF", "#1D4ED8", "#6C63FF"]}
+          colors={vipActive ? ["#991B1B", "#DC2626", "#EF4444"] : ["#1E40AF", "#1D4ED8", "#6C63FF"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.alertGrad}
         >
           {/* Left accent bar */}
-          <View style={styles.alertAccentBar} />
+          <View style={[styles.alertAccentBar, vipActive && { backgroundColor: "#EF4444" }, !vipActive && { backgroundColor: phoneBatteryLevel < 0.25 ? "#FBBF24" : "#10B981" }]} />
 
           <View style={styles.alertBody}>
             <View style={styles.alertIconBadge}>
-              <Ionicons name="battery-charging" size={22} color="#FBBF24" />
+              <Ionicons 
+                name={vipActive ? "shield-checkmark" : (phoneBatteryCharging ? "battery-charging" : "battery-full")} 
+                size={22} 
+                color={vipActive ? "#FFFFFF" : (phoneBatteryLevel < 0.25 ? "#FBBF24" : "#34D399")} 
+              />
             </View>
 
             <View style={styles.alertText}>
-              <Text style={styles.alertTitle}>{t("home.lowBattery")}</Text>
-              <Text style={styles.alertSub}>{t("home.batteryDesc")}</Text>
+              <Text style={styles.alertTitle}>
+                {vipActive 
+                  ? "🚨 EMERGENCY OVERRIDE ACTIVE" 
+                  : (phoneBatteryLevel < 0.25 ? "⚠️ PHONE BATTERY LOW" : "🔋 PHONE BATTERY HEALTHY")}
+              </Text>
+              <Text style={styles.alertSub}>
+                {vipActive 
+                  ? `Forcing Green Light on: ${vipLanesGreen && vipLanesGreen.length > 0 ? vipLanesGreen.map(l => `Lane ${l === "81" ? "1" : l === "82" ? "2" : l === "83" ? "3" : "4"}`).join(", ") : "No Lanes selected"}`
+                  : (phoneBatteryCharging 
+                      ? "Your mobile device is currently plugged in and charging." 
+                      : (phoneBatteryLevel < 0.25 
+                          ? "Please connect your phone to a charger soon to keep monitoring streets." 
+                          : "Your mobile device is fully optimized and ready for operations."))}
+              </Text>
             </View>
 
-            <View style={styles.alertBadge}>
-              <Text style={styles.alertBadgeText}>39%</Text>
+            <View style={[styles.alertBadge, vipActive && { backgroundColor: "#EF4444" }, !vipActive && { backgroundColor: phoneBatteryLevel < 0.25 ? "rgba(251,191,36,0.2)" : "rgba(52,211,153,0.2)" }]}>
+              <Text style={[styles.alertBadgeText, vipActive && { color: "#FFFFFF" }, !vipActive && { color: phoneBatteryLevel < 0.25 ? "#FBBF24" : "#34D399" }]}>
+                {vipActive ? "VIP" : `${Math.round(phoneBatteryLevel * 100)}%`}
+              </Text>
             </View>
           </View>
 
           {/* Progress bar */}
           <View style={styles.progressBg}>
             <LinearGradient
-              colors={["#F59E0B", "#FBBF24"]}
+              colors={vipActive ? ["#EF4444", "#F87171"] : (phoneBatteryLevel < 0.25 ? ["#F59E0B", "#FBBF24"] : ["#10B981", "#34D399"])}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
-              style={styles.progressFill}
+              style={[styles.progressFill, { width: `${vipActive ? 100 : Math.round(phoneBatteryLevel * 100)}%` as any }]}
             />
           </View>
         </LinearGradient>
@@ -272,30 +382,32 @@ export default function HomeScreen() {
           <View style={{ width: 12 }} />
           <StatusCard
             label={t("home.status")}
-            value={t("home.running")}
-            icon="pulse"
-            valueColor="#34D399"
-            accentColor="#34D399"
+            value={error ? t("home.offline", "Offline") : t("home.running", "Online")}
+            icon={error ? "cloud-offline-outline" : "pulse"}
+            valueColor={error ? "#EF4444" : "#34D399"}
+            accentColor={error ? "#EF4444" : "#34D399"}
             gradientColors={["#1E40AF", "#1D4ED8", "#6C63FF"]}
-            isPulsing
+            isPulsing={!error}
           />
         </View>
         <View style={styles.row}>
           <StatusCard
             label={t("home.mode")}
-            value={t("home.yellow")}
-            icon="construct"
-            valueColor="#FBBF24"
-            accentColor="#FBBF24"
+            value={modeInfo.value}
+            icon={modeInfo.icon}
+            valueColor={modeInfo.color}
+            accentColor={modeInfo.color}
             gradientColors={["#1E40AF", "#1D4ED8", "#6C63FF"]}
           />
           <View style={{ width: 12 }} />
           <StatusCard
-            label={t("home.temperature")}
-            value="N/A"
-            icon="thermometer"
-            accentColor="#F87171"
+            label="YOLO AI Detect"
+            value={inferenceHas ? t("home.active", "Active") : t("home.inactive", "Inactive")}
+            icon="eye-outline"
+            valueColor={inferenceHas ? "#34D399" : "#9CA3AF"}
+            accentColor={inferenceHas ? "#34D399" : "#9CA3AF"}
             gradientColors={["#1E40AF", "#1D4ED8", "#6C63FF"]}
+            isPulsing={inferenceHas}
           />
         </View>
       </View>
@@ -310,7 +422,7 @@ export default function HomeScreen() {
   );
 
   const renderItem = ({ item }: { item: (typeof recentActions)[0] }) => {
-    const isWarning = item.icon === "warning-outline";
+    const isWarning = item.icon === "shield-checkmark-outline";
     const accent = isWarning ? "#F87171" : theme.colors.accent;
     return (
       <View style={styles.actionRow}>
@@ -337,15 +449,25 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <TopIndicator />
-      <FlatList
-        data={recentActions}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-        ListHeaderComponent={renderHeader}
-        ListFooterComponent={() => <View style={{ height: 32 }} />}
+      <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
-      />
+      >
+        {renderHeader()}
+        {recentActions.length === 0 ? (
+          <View style={styles.actionRowEmpty}>
+            <Ionicons name="sparkles-outline" size={16} color="#9CA3AF" style={{ marginRight: 8 }} />
+            <Text style={styles.actionDescEmpty}>Waiting for physical traffic cycles...</Text>
+          </View>
+        ) : (
+          recentActions.map((item) => (
+            <React.Fragment key={item.id}>
+              {renderItem({ item })}
+            </React.Fragment>
+          ))
+        )}
+        <View style={{ height: 32 }} />
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -615,5 +737,23 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: theme.fontFamily.body,
     color: "#6B7280",
+  },
+  actionRowEmpty: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.4)",
+    borderStyle: "dashed",
+    borderWidth: 1,
+    borderColor: "#D1D5DB",
+    marginHorizontal: 16,
+    marginBottom: 12,
+    borderRadius: 18,
+    paddingVertical: 18,
+  },
+  actionDescEmpty: {
+    fontSize: 14,
+    fontFamily: theme.fontFamily["body-medium"],
+    color: "#9CA3AF",
   },
 });

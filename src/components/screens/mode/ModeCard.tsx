@@ -12,6 +12,7 @@ interface ModeCardProps {
   label: string;
   description: string;
   onPress: () => void;
+  disabled?: boolean;
 }
 
 export default function ModeCard({
@@ -20,12 +21,18 @@ export default function ModeCard({
   label,
   description,
   onPress,
+  disabled = false,
 }: ModeCardProps) {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={onPress}
-      style={[styles.modeCard, isActive && styles.modeCardActive]}
+      disabled={disabled}
+      style={[
+        styles.modeCard,
+        isActive && styles.modeCardActive,
+        disabled && { opacity: 0.6 },
+      ]}
     >
       {isActive ? (
         <LinearGradient
