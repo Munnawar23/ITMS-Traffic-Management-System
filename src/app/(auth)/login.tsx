@@ -23,22 +23,22 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function LoginScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [phoneFocused, setPhoneFocused] = useState(false);
+  const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
 
   const setAuth = useAuthStore((state) => state.setAuth);
 
-  const validatePhoneNumber = (phone: string) => {
-    return /^[6-9]\d{9}$/.test(phone);
+  const validateEmail = (emailStr: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailStr.trim());
   };
 
   const handleLogin = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    if (!validatePhoneNumber(phoneNumber)) {
+    if (!validateEmail(email)) {
       Alert.alert(
         t("login.validation.invalidEmail"),
         t("login.validation.invalidEmailMsg"),
@@ -56,7 +56,7 @@ export default function LoginScreen() {
 
     setLoading(true);
     try {
-      const loginData = { phone_number: phoneNumber, password };
+      const loginData = { email: email.trim(), password };
       const loginResponse = await loginApi(loginData);
 
       if (loginResponse.access_token) {
@@ -115,43 +115,37 @@ export default function LoginScreen() {
           <View style={styles.formCard}>
             <Text style={styles.welcomeText}>{t("login.welcome")}</Text>
 
-            {/* Phone Number Input */}
+            {/* Email Input */}
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>{t("login.email")}</Text>
               <View
                 style={[
                   styles.inputWrapper,
-                  phoneFocused ? styles.inputWrapperFocused : null,
+                  emailFocused ? styles.inputWrapperFocused : null,
                 ]}
               >
                 <View
                   style={[
                     styles.iconBox,
-                    phoneFocused ? styles.iconBoxFocused : null,
+                    emailFocused ? styles.iconBoxFocused : null,
                   ]}
                 >
                   <Ionicons
-                    name="call-outline"
+                    name="mail-outline"
                     size={16}
-                    color={phoneFocused ? "#ffffff" : "#000000"}
+                    color={emailFocused ? "#ffffff" : "#000000"}
                   />
                 </View>
                 <TextInput
                   style={styles.textInput}
                   placeholder={t("login.emailPlaceholder")}
                   placeholderTextColor="#adb5bd"
-                  value={phoneNumber}
-                  onChangeText={(text) => {
-                    const numericValue = text.replace(/[^0-9]/g, "");
-                    if (numericValue.length <= 10) {
-                      setPhoneNumber(numericValue);
-                    }
-                  }}
+                  value={email}
+                  onChangeText={setEmail}
                   autoCapitalize="none"
-                  keyboardType="phone-pad"
-                  maxLength={10}
-                  onFocus={() => setPhoneFocused(true)}
-                  onBlur={() => setPhoneFocused(false)}
+                  keyboardType="email-address"
+                  onFocus={() => setEmailFocused(true)}
+                  onBlur={() => setEmailFocused(false)}
                 />
               </View>
             </View>

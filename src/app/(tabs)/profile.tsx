@@ -13,6 +13,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useThemeStore } from "@/store/useThemeStore";
 import ProfileHeaderCard from "@/components/screens/profile/ProfileHeaderCard";
 import * as Haptics from "expo-haptics";
+import { logoutApi } from "@/api/login";
 
 export default function ProfileScreen() {
   const { user, logout, setLanguage } = useAuthStore();
@@ -39,7 +40,12 @@ export default function ProfileScreen() {
         {
           text: t("profile.logout"),
           style: "destructive",
-          onPress: () => {
+          onPress: async () => {
+            try {
+              await logoutApi();
+            } catch (error) {
+              console.warn("⚠️ Remote logout failed, proceeding with local logout.");
+            }
             logout();
             router.replace("/login" as any);
           },

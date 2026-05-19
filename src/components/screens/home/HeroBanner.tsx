@@ -3,8 +3,10 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
+import { Image } from "expo-image";
 import { theme, useAppTheme } from "@/styles/theme";
 import { getGreeting } from "@/utils/dateUtils";
+import { useAuthStore } from "@/store/authStore";
 
 interface HeroBannerProps {
   firstName: string;
@@ -15,6 +17,7 @@ interface HeroBannerProps {
 export default function HeroBanner({ firstName, initial, dateStr }: HeroBannerProps) {
   const { t } = useTranslation();
   const { colors } = useAppTheme();
+  const { user } = useAuthStore();
   const router = useRouter();
 
   return (
@@ -42,7 +45,11 @@ export default function HeroBanner({ firstName, initial, dateStr }: HeroBannerPr
         style={[styles.avatarRing, { borderColor: colors.primary + "30" }]}
       >
         <View style={[styles.avatar, { backgroundColor: colors.primary + "15" }]}>
-          <Text style={[styles.avatarText, { color: colors.primary }]}>{initial}</Text>
+          {user?.profile_picture ? (
+            <Image source={{ uri: user.profile_picture }} style={styles.avatarImage} />
+          ) : (
+            <Text style={[styles.avatarText, { color: colors.primary }]}>{initial}</Text>
+          )}
         </View>
       </TouchableOpacity>
     </View>
@@ -97,6 +104,11 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     alignItems: "center",
     justifyContent: "center",
+  },
+  avatarImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 22,
   },
   avatarText: {
     fontSize: 18,

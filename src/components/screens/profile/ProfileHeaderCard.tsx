@@ -10,6 +10,7 @@ interface UserType {
   profile_picture?: string;
   role?: string;
   phone_number?: string;
+  email?: string;
 }
 
 interface ProfileHeaderCardProps {
@@ -74,16 +75,16 @@ export default function ProfileHeaderCard({ user }: ProfileHeaderCardProps) {
               </Text>
             </View>
 
-            {/* Phone Widget */}
+            {/* Phone / Email Widget */}
             <View style={[styles.widget, { backgroundColor: glassBg, borderColor: glassBorder }]}>
               <View style={[styles.widgetIconWrapper, { backgroundColor: glassBg }]}>
-                <Ionicons name="call" size={18} color={textColor} />
+                <Ionicons name={user?.email ? "mail" : "call"} size={18} color={textColor} />
               </View>
               <Text style={[styles.widgetLabel, { color: subtextColor }]} numberOfLines={1}>
-                Contact
+                {user?.email ? "Email" : "Contact"}
               </Text>
               <Text style={[styles.widgetValue, { color: textColor }]} numberOfLines={1} adjustsFontSizeToFit>
-                {user?.phone_number || "9999999999"}
+                {user?.email || user?.phone_number || "9999999999"}
               </Text>
             </View>
           </View>
