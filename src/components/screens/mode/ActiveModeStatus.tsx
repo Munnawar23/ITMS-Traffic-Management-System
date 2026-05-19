@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { ModeOption } from "@/constants";
-import { theme } from "@/styles/theme";
+import { theme, useAppTheme } from "@/styles/theme";
 import { wp, hp } from "@/helpers";
 
 interface ActiveModeStatusProps {
@@ -12,9 +12,10 @@ interface ActiveModeStatusProps {
 
 export default function ActiveModeStatus({ active }: ActiveModeStatusProps) {
   const { t } = useTranslation();
+  const { colors } = useAppTheme();
 
   return (
-    <View style={styles.activeModeCard}>
+    <View style={[styles.activeModeCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
       {/* Subtle background gradient or active border accent */}
       <View style={[styles.activeAccentBar, { backgroundColor: active.accent }]} />
       
@@ -44,11 +45,11 @@ export default function ActiveModeStatus({ active }: ActiveModeStatusProps) {
             </View>
           </View>
 
-          <Text style={styles.activeModeTitle}>
+          <Text style={[styles.activeModeTitle, { color: colors.text }]}>
             {t(`mode.${active.key}`)}
           </Text>
           
-          <Text style={styles.activeModeDesc}>
+          <Text style={[styles.activeModeDesc, { color: colors.subtext }]}>
             {active.description}. Optimizing traffic flow dynamically for the active junction.
           </Text>
         </View>
@@ -60,7 +61,7 @@ export default function ActiveModeStatus({ active }: ActiveModeStatusProps) {
 const styles = StyleSheet.create({
   activeModeCard: {
     marginHorizontal: wp(4),
-    marginTop: hp(3),
+    marginTop: hp(1),
     backgroundColor: "#FFFFFF",
     borderRadius: 24,
     overflow: "hidden",
@@ -112,9 +113,9 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   activeTag: {
-    fontSize: 9,
+    fontSize: 11,
     fontFamily: theme.fontFamily["body-semibold"],
-    letterSpacing: 1.2,
+    letterSpacing: 1.3,
     textTransform: "uppercase",
   },
   liveIndicator: {
@@ -139,15 +140,15 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   activeModeTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: theme.fontFamily["body-semibold"],
     color: theme.colors.text,
-    marginBottom: 4,
+    marginBottom: 6,
   },
   activeModeDesc: {
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: theme.fontFamily.body,
-    color: "#64748B",
-    lineHeight: 18,
+    color: "#000000",
+    lineHeight: 19,
   },
 });

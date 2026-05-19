@@ -1,15 +1,28 @@
-export const colors = {
+import { useColorScheme } from "react-native";
+import { useThemeStore } from "@/store/useThemeStore";
+
+export const lightColors = {
   background: "#F4F5F7",
-  card: "#1D4ED8",
-  text: "#0B0B0B",
-  subtext: "#6C757D",
+  card: "#FFFFFF",
+  text: "#000000",
+  subtext: "#000000",
   primary: "#1E40AF",
   accent: "#6C63FF",
-  border: "#C7D2FE",
+  border: "#E2E8F0",
+};
+
+export const darkColors = {
+  background: "#0F172A", // Soft gray-dark slate (Slate-900)
+  card: "#1E293B",       // Slate-800
+  text: "#FFFFFF",       // Clean high-contrast white text
+  subtext: "#FFFFFF",    // Clean high-contrast white subtext
+  primary: "#3B82F6",    // Soft indigo/blue accent for dark mode
+  accent: "#818CF8",     // Indigo-400
+  border: "#334155",     // Slate-700
 };
 
 export const theme = {
-  colors,
+  colors: lightColors,
   fontFamily: {
     heading: "Outfit-Bold",
     body: "Poppins-Regular",
@@ -18,4 +31,22 @@ export const theme = {
   },
 };
 
-export type ThemeColors = typeof colors;
+export type ThemeColors = typeof lightColors;
+
+export function useAppTheme() {
+  const systemScheme = useColorScheme();
+  const themeMode = useThemeStore((state) => state.themeMode) || "system";
+
+  const isDark = themeMode === "system" 
+    ? systemScheme === "dark" 
+    : themeMode === "dark";
+
+  const colors = isDark ? darkColors : lightColors;
+
+  return {
+    isDark,
+    themeMode,
+    colors,
+    fontFamily: theme.fontFamily,
+  };
+}

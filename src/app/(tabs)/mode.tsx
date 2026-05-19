@@ -12,7 +12,7 @@ import ModeCard from "@/components/screens/mode/ModeCard";
 import UnifiedModeModal from "@/components/screens/mode/UnifiedModeModal";
 import ActiveModeStatus from "@/components/screens/mode/ActiveModeStatus";
 import { MODES, ModeKey } from "@/constants";
-import { theme } from "@/styles/theme";
+import { theme, useAppTheme } from "@/styles/theme";
 import { wp, hp } from "@/helpers";
 import { useTrafficStore } from "@/store/useTrafficStore";
 import { ApiMode } from "@/types/traffic";
@@ -105,9 +105,10 @@ export default function ModeScreen() {
 
   const activeModeKey = getUiModeFromApiMode(currentMode);
   const active = MODES.find((m) => m.key === activeModeKey) || MODES[0];
+  const { colors } = useAppTheme();
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={["top"]}>
       {/* ── Top Indicator Strip ────────────────────────────── */}
       <TopIndicator />
 
@@ -123,17 +124,20 @@ export default function ModeScreen() {
           isLoading={isLoading}
         />
 
+        {/* ── Active Mode Status Card ── */}
+        <ActiveModeStatus active={active} />
+
         {/* ── Section Header ───────────────────────────────── */}
         <View style={styles.sectionHeader}>
           <View>
-            <Text style={styles.sectionTitle}>{t("mode.availableModes")}</Text>
-            <Text style={styles.sectionSub}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t("mode.availableModes")}</Text>
+            <Text style={[styles.sectionSub, { color: colors.subtext }]}>
               Select a signal control strategy
             </Text>
           </View>
-          <View style={styles.sectionBadge}>
-            <Ionicons name="pulse" size={12} color={theme.colors.accent} />
-            <Text style={styles.sectionBadgeText}>{t("mode.realTime")}</Text>
+          <View style={[styles.sectionBadge, { backgroundColor: colors.primary + "1A", borderColor: colors.border }]}>
+            <Ionicons name="pulse" size={12} color={colors.accent} />
+            <Text style={[styles.sectionBadgeText, { color: colors.primary }]}>{t("mode.realTime")}</Text>
           </View>
         </View>
 
@@ -151,9 +155,6 @@ export default function ModeScreen() {
             />
           ))}
         </View>
-
-        {/* ── Active Mode Status Card ── */}
-        <ActiveModeStatus active={active} />
 
         <View style={{ height: 32 }} />
       </ScrollView>
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
   sectionSub: {
     fontSize: 12,
     fontFamily: theme.fontFamily.body,
-    color: "#64748B",
+    color: "#000000",
     marginTop: 2,
   },
   sectionBadge: {

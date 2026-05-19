@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Battery from "expo-battery";
 import { useTranslation } from "react-i18next";
-import { theme } from "@/styles/theme";
+import { theme, useAppTheme } from "@/styles/theme";
 
 interface SectionHeaderProps {
   title: string;
@@ -15,9 +15,10 @@ interface SectionHeaderProps {
 }
 
 function SectionHeader({ title, badgeLabel, badgeIcon, badgeColor, badgeBg }: SectionHeaderProps) {
+  const { colors } = useAppTheme();
   return (
     <View style={styles.sectionHeader}>
-      <Text style={styles.sectionTitle}>{title}</Text>
+      <Text style={[styles.sectionTitle, { color: colors.text }]}>{title}</Text>
       {badgeLabel ? (
         <View style={[styles.sectionBadge, { backgroundColor: badgeBg }]}>
           {badgeIcon && <Ionicons name={badgeIcon} size={11} color={badgeColor} style={{ marginRight: 3 }} />}

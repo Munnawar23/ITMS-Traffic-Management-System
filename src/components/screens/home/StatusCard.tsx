@@ -1,4 +1,4 @@
-import { theme } from "@/styles/theme";
+import { theme, useAppTheme } from "@/styles/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
@@ -18,14 +18,19 @@ const StatusCard: React.FC<StatusCardProps> = ({
   label,
   value,
   icon,
-  valueColor = "#FFFFFF",
-  accentColor = theme.colors.accent,
+  valueColor,
+  accentColor,
   gradientColors,
   isPulsing = false,
 }) => {
+  const { colors: appColors } = useAppTheme();
+
+  const finalValueColor = valueColor ?? "#FFFFFF";
+  const finalAccentColor = accentColor ?? appColors.accent;
+
   const defaultGradient: readonly [string, string] = [
-    theme.colors.primary + "CC",
-    "#0F2463CC",
+    appColors.primary + "CC",
+    appColors.background === "#0F172A" ? "#1E293BCC" : "#0F2463CC",
   ];
   const colors = gradientColors ?? defaultGradient;
 
@@ -38,8 +43,8 @@ const StatusCard: React.FC<StatusCardProps> = ({
         style={styles.gradient}
       >
         {/* Icon badge top-left */}
-        <View style={[styles.iconBadge, { backgroundColor: accentColor + "28" }]}>
-          <Ionicons name={icon} size={17} color={accentColor} />
+        <View style={[styles.iconBadge, { backgroundColor: finalAccentColor + "28" }]}>
+          <Ionicons name={icon} size={17} color={finalAccentColor} />
         </View>
 
         {/* Label */}
@@ -50,7 +55,7 @@ const StatusCard: React.FC<StatusCardProps> = ({
         {/* Value row */}
         <View style={styles.valueRow}>
           <Text
-            style={[styles.value, { color: valueColor }]}
+            style={[styles.value, { color: finalValueColor }]}
             numberOfLines={1}
             adjustsFontSizeToFit
             minimumFontScale={0.7}
@@ -58,7 +63,7 @@ const StatusCard: React.FC<StatusCardProps> = ({
             {value}
           </Text>
           {isPulsing && (
-            <View style={[styles.pulseDot, { backgroundColor: accentColor }]} />
+            <View style={[styles.pulseDot, { backgroundColor: finalAccentColor }]} />
           )}
         </View>
       </LinearGradient>

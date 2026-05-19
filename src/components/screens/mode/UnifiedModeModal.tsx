@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
-import { theme } from "@/styles/theme";
+import { theme, useAppTheme } from "@/styles/theme";
 import { wp, hp } from "@/helpers";
 
 interface UnifiedModeModalProps {
@@ -33,6 +33,7 @@ export default function UnifiedModeModal({
   onDone,
 }: UnifiedModeModalProps) {
   const { t } = useTranslation();
+  const { colors } = useAppTheme();
 
   // Local state managers
   const [localLaneTimes, setLocalLaneTimes] = useState({
@@ -111,26 +112,27 @@ export default function UnifiedModeModal({
             key={laneKey}
             style={[
               laneStyles.laneRow,
+              { backgroundColor: colors.background, borderColor: colors.border },
               val !== "" && laneStyles.laneRowActive,
             ]}
           >
             <View style={laneStyles.laneLeft}>
-              <View style={laneStyles.laneIconWrap}>
+              <View style={[laneStyles.laneIconWrap, { backgroundColor: colors.card }]}>
                 <Ionicons
                   name="navigate-outline"
                   size={16}
-                  color={theme.colors.primary}
+                  color={colors.primary}
                 />
               </View>
-              <Text style={laneStyles.laneName}>
+              <Text style={[laneStyles.laneName, { color: colors.text }]}>
                 {t(`mode.timesetModal.${laneKey}`)}
               </Text>
             </View>
-            <View style={laneStyles.laneRight}>
+            <View style={[laneStyles.laneRight, { backgroundColor: colors.card, borderColor: colors.border }]}>
               <TextInput
-                style={laneStyles.laneInput}
+                style={[laneStyles.laneInput, { color: colors.text }]}
                 placeholder="0"
-                placeholderTextColor="#94A3B8"
+                placeholderTextColor={colors.subtext + "80"}
                 keyboardType="numeric"
                 maxLength={3}
                 value={val}
@@ -138,7 +140,7 @@ export default function UnifiedModeModal({
                   setLocalLaneTimes((prev) => ({ ...prev, [laneKey]: text }))
                 }
               />
-              <Text style={laneStyles.laneUnit}>
+              <Text style={[laneStyles.laneUnit, { color: colors.subtext }]}>
                 {t("mode.timesetModal.placeholder")}
               </Text>
             </View>
@@ -156,7 +158,8 @@ export default function UnifiedModeModal({
         onPress={() => setLocalStrategy("cycle")}
         style={[
           autoStyles.strategyRow,
-          localStrategy === "cycle" && autoStyles.strategyRowActive,
+          { backgroundColor: colors.background, borderColor: colors.border },
+          localStrategy === "cycle" && { borderColor: colors.primary, backgroundColor: colors.primary + "10" },
         ]}
       >
         <View style={autoStyles.strategyLeft}>
@@ -164,20 +167,20 @@ export default function UnifiedModeModal({
             style={[
               autoStyles.iconWrap,
               localStrategy === "cycle"
-                ? autoStyles.iconWrapActive
-                : { backgroundColor: "#EFF6FF" },
+                ? { backgroundColor: colors.primary + "18" }
+                : { backgroundColor: colors.card },
             ]}
           >
             <Ionicons
               name="sync-outline"
               size={20}
               color={
-                localStrategy === "cycle" ? theme.colors.primary : "#3B82F6"
+                localStrategy === "cycle" ? colors.primary : colors.text
               }
             />
           </View>
           <View style={autoStyles.strategyTexts}>
-            <Text style={autoStyles.strategyName}>
+            <Text style={[autoStyles.strategyName, { color: colors.text }]}>
               {t("mode.autoModal.cycleAuto")}
             </Text>
           </View>
@@ -186,11 +189,12 @@ export default function UnifiedModeModal({
         <View
           style={[
             autoStyles.radioDot,
-            localStrategy === "cycle" && autoStyles.radioDotActive,
+            { borderColor: colors.border },
+            localStrategy === "cycle" && { borderColor: colors.primary },
           ]}
         >
           {localStrategy === "cycle" && (
-            <View style={autoStyles.radioDotInner} />
+            <View style={[autoStyles.radioDotInner, { backgroundColor: colors.primary }]} />
           )}
         </View>
       </TouchableOpacity>
@@ -201,7 +205,8 @@ export default function UnifiedModeModal({
         onPress={() => setLocalStrategy("jump")}
         style={[
           autoStyles.strategyRow,
-          localStrategy === "jump" && autoStyles.strategyRowActive,
+          { backgroundColor: colors.background, borderColor: colors.border },
+          localStrategy === "jump" && { borderColor: colors.primary, backgroundColor: colors.primary + "10" },
         ]}
       >
         <View style={autoStyles.strategyLeft}>
@@ -209,20 +214,20 @@ export default function UnifiedModeModal({
             style={[
               autoStyles.iconWrap,
               localStrategy === "jump"
-                ? autoStyles.iconWrapActive
-                : { backgroundColor: "#EFF6FF" },
+                ? { backgroundColor: colors.primary + "18" }
+                : { backgroundColor: colors.card },
             ]}
           >
             <Ionicons
               name="trending-up-outline"
               size={20}
               color={
-                localStrategy === "jump" ? theme.colors.primary : "#3B82F6"
+                localStrategy === "jump" ? colors.primary : colors.text
               }
             />
           </View>
           <View style={autoStyles.strategyTexts}>
-            <Text style={autoStyles.strategyName}>
+            <Text style={[autoStyles.strategyName, { color: colors.text }]}>
               {t("mode.autoModal.jumpMode")}
             </Text>
           </View>
@@ -231,11 +236,12 @@ export default function UnifiedModeModal({
         <View
           style={[
             autoStyles.radioDot,
-            localStrategy === "jump" && autoStyles.radioDotActive,
+            { borderColor: colors.border },
+            localStrategy === "jump" && { borderColor: colors.primary },
           ]}
         >
           {localStrategy === "jump" && (
-            <View style={autoStyles.radioDotInner} />
+            <View style={[autoStyles.radioDotInner, { backgroundColor: colors.primary }]} />
           )}
         </View>
       </TouchableOpacity>
@@ -244,11 +250,11 @@ export default function UnifiedModeModal({
 
   const renderLaneMultiselectContent = () => {
     const isVip = modeKey === "vip";
-    const accent = isVip ? theme.colors.primary : AMBER_COLOR;
+    const accent = isVip ? colors.primary : AMBER_COLOR;
     const iconName = isVip ? "shield-outline" : "flash-outline";
     const bgLight = isVip ? "#FEE2E2" : "#FEF3C7";
-    const activeBg = isVip ? theme.colors.primary + "05" : AMBER_COLOR + "08";
-    const activeBorder = isVip ? theme.colors.primary + "30" : AMBER_COLOR + "40";
+    const activeBg = isVip ? colors.primary + "0F" : AMBER_COLOR + "12";
+    const activeBorder = isVip ? colors.primary + "30" : AMBER_COLOR + "40";
 
     return (
       <View style={laneStyles.laneList}>
@@ -266,6 +272,7 @@ export default function UnifiedModeModal({
               }
               style={[
                 laneStyles.laneRow,
+                { backgroundColor: colors.background, borderColor: colors.border },
                 isSelected && {
                   borderColor: activeBorder,
                   backgroundColor: activeBg,
@@ -289,7 +296,7 @@ export default function UnifiedModeModal({
                     }
                   />
                 </View>
-                <Text style={laneStyles.laneName}>
+                <Text style={[laneStyles.laneName, { color: colors.text }]}>
                   {t(`mode.${modeKey}Modal.${laneKey}`)}
                 </Text>
               </View>
@@ -298,6 +305,7 @@ export default function UnifiedModeModal({
               <View
                 style={[
                   multiselectStyles.checkbox,
+                  { backgroundColor: colors.card, borderColor: colors.border },
                   isSelected && {
                     borderColor: accent,
                     backgroundColor: accent,
@@ -315,7 +323,7 @@ export default function UnifiedModeModal({
     );
   };
 
-  const dynamicDoneColor = modeKey === "blinker" ? AMBER_COLOR : theme.colors.primary;
+  const dynamicDoneColor = modeKey === "blinker" ? AMBER_COLOR : colors.primary;
 
   return (
     <Modal
@@ -330,9 +338,9 @@ export default function UnifiedModeModal({
       >
         <Pressable style={StyleSheet.absoluteFill} onPress={onCancel} />
 
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>{t(`mode.${modeKey}Modal.title`)}</Text>
-          <Text style={styles.modalSubtitle}>
+        <View style={[styles.modalContainer, { backgroundColor: colors.card }]}>
+          <Text style={[styles.modalTitle, { color: colors.text }]}>{t(`mode.${modeKey}Modal.title`)}</Text>
+          <Text style={[styles.modalSubtitle, { color: colors.subtext }]}>
             {t(`mode.${modeKey}Modal.subtitle`)}
           </Text>
 
@@ -347,9 +355,9 @@ export default function UnifiedModeModal({
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={onCancel}
-              style={styles.modalCancelButton}
+              style={[styles.modalCancelButton, { backgroundColor: colors.background, borderColor: colors.border }]}
             >
-              <Text style={styles.modalCancelButtonText}>
+              <Text style={[styles.modalCancelButtonText, { color: colors.text }]}>
                 {t(`mode.${modeKey}Modal.cancel`)}
               </Text>
             </TouchableOpacity>

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { CycleReportEntry } from "@/types/traffic";
-import { theme } from "@/styles/theme";
+import { theme, useAppTheme } from "@/styles/theme";
 
 interface SectionHeaderProps {
   title: string;
@@ -12,13 +12,14 @@ interface SectionHeaderProps {
 }
 
 function SectionHeader({ title, badgeLabel, badgeIcon }: SectionHeaderProps) {
+  const { colors } = useAppTheme();
   return (
     <View style={styles.sectionHeader}>
-      <Text style={styles.sectionTitle}>{title}</Text>
+      <Text style={[styles.sectionTitle, { color: colors.text }]}>{title}</Text>
       {badgeLabel ? (
-        <View style={styles.sectionBadge}>
-          {badgeIcon && <Ionicons name={badgeIcon} size={11} color="#6C63FF" style={{ marginRight: 3 }} />}
-          <Text style={styles.sectionBadgeText}>{badgeLabel}</Text>
+        <View style={[styles.sectionBadge, { backgroundColor: colors.accent + "1A" }]}>
+          {badgeIcon && <Ionicons name={badgeIcon} size={11} color={colors.accent} style={{ marginRight: 3 }} />}
+          <Text style={[styles.sectionBadgeText, { color: colors.accent }]}>{badgeLabel}</Text>
         </View>
       ) : null}
     </View>
@@ -31,6 +32,7 @@ interface RecentActionsListProps {
 
 export default function RecentActionsList({ logs }: RecentActionsListProps) {
   const { t } = useTranslation();
+  const { colors } = useAppTheme();
 
   // Map live RPi5 database logs to dashboard action items
   const recentActions = [...logs]
@@ -57,9 +59,9 @@ export default function RecentActionsList({ logs }: RecentActionsListProps) {
 
   const renderItem = (item: typeof recentActions[0]) => {
     const isWarning = item.icon === "shield-checkmark-outline";
-    const accent = isWarning ? "#F87171" : theme.colors.accent;
+    const accent = isWarning ? "#F87171" : colors.accent;
     return (
-      <View style={styles.actionRow} key={item.id}>
+      <View style={[styles.actionRow, { backgroundColor: colors.card }]} key={item.id}>
         {/* Left accent bar */}
         <View style={[styles.actionAccent, { backgroundColor: accent }]} />
         {/* Icon chip */}
@@ -68,10 +70,10 @@ export default function RecentActionsList({ logs }: RecentActionsListProps) {
         </View>
         {/* Text */}
         <View style={styles.actionText}>
-          <Text style={styles.actionDesc}>{item.desc}</Text>
+          <Text style={[styles.actionDesc, { color: colors.text }]}>{item.desc}</Text>
           <View style={styles.actionMeta}>
-            <Ionicons name="time-outline" size={11} color="#6B7280" />
-            <Text style={styles.actionTime}>{item.time}</Text>
+            <Ionicons name="time-outline" size={11} color={colors.subtext} />
+            <Text style={[styles.actionTime, { color: colors.subtext }]}>{item.time}</Text>
           </View>
         </View>
       </View>
@@ -87,9 +89,9 @@ export default function RecentActionsList({ logs }: RecentActionsListProps) {
       />
 
       {recentActions.length === 0 ? (
-        <View style={styles.actionRowEmpty}>
-          <Ionicons name="sparkles-outline" size={16} color="#9CA3AF" style={{ marginRight: 8 }} />
-          <Text style={styles.actionDescEmpty}>Waiting for physical traffic cycles...</Text>
+        <View style={[styles.actionRowEmpty, { borderColor: colors.border, backgroundColor: colors.card + "60" }]}>
+          <Ionicons name="sparkles-outline" size={16} color={colors.subtext} style={{ marginRight: 8 }} />
+          <Text style={[styles.actionDescEmpty, { color: colors.subtext }]}>Waiting for physical traffic cycles...</Text>
         </View>
       ) : (
         recentActions.map((item) => renderItem(item))

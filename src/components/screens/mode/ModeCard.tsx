@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Haptics from "expo-haptics";
 import { ModeOption } from "@/constants";
-import { theme } from "@/styles/theme";
+import { theme, useAppTheme } from "@/styles/theme";
 import { wp, hp } from "@/helpers";
 
 interface ModeCardProps {
@@ -24,6 +24,8 @@ export default function ModeCard({
   onPress,
   disabled = false,
 }: ModeCardProps) {
+  const { colors } = useAppTheme();
+  
   const handlePress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     onPress();
@@ -36,6 +38,9 @@ export default function ModeCard({
       disabled={disabled}
       style={[
         styles.modeCard,
+        isActive 
+          ? { backgroundColor: mode.gradientStart, borderColor: "transparent" }
+          : { backgroundColor: colors.card, borderColor: colors.border },
         isActive && styles.modeCardActive,
         disabled && { opacity: 0.6 },
       ]}
@@ -77,15 +82,15 @@ export default function ModeCard({
             styles.cardPill,
             isActive
               ? styles.cardPillActive
-              : { backgroundColor: "#F1F5F9", borderColor: "#E2E8F0" },
+              : { backgroundColor: colors.background, borderColor: colors.border },
           ]}
         >
-          <View style={[styles.pillDot, !isActive && { backgroundColor: "#CBD5E1" }]} />
+          <View style={[styles.pillDot, !isActive && { backgroundColor: colors.subtext }]} />
           <Text
             style={[
               styles.pillText,
               {
-                color: isActive ? "#34D399" : "#94A3B8",
+                color: isActive ? "#34D399" : colors.subtext,
               },
             ]}
           >
@@ -100,7 +105,7 @@ export default function ModeCard({
           numberOfLines={1}
           style={[
             styles.cardLabel,
-            { color: isActive ? "#FFFFFF" : theme.colors.text },
+            { color: isActive ? "#FFFFFF" : colors.text },
           ]}
         >
           {label}
@@ -110,7 +115,7 @@ export default function ModeCard({
           style={[
             styles.cardDesc,
             {
-              color: isActive ? "rgba(255,255,255,0.75)" : "#64748B",
+              color: isActive ? "rgba(255,255,255,0.75)" : colors.subtext,
             },
           ]}
         >

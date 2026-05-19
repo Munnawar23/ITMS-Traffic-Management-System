@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { theme } from "@/styles/theme";
+import { theme, useAppTheme } from "@/styles/theme";
 
 interface UserType {
   name?: string;
@@ -16,10 +16,12 @@ interface ProfileHeaderCardProps {
 }
 
 export default function ProfileHeaderCard({ user }: ProfileHeaderCardProps) {
+  const { colors } = useAppTheme();
+
   return (
-    <View style={styles.headerCard}>
+    <View style={[styles.headerCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
       <View style={styles.profileBasicInfo}>
-        <View style={styles.avatarCircle}>
+        <View style={[styles.avatarCircle, { backgroundColor: colors.primary + "1A" }]}>
           {user?.profile_picture ? (
             <Image
               source={{ uri: user.profile_picture }}
@@ -29,49 +31,49 @@ export default function ProfileHeaderCard({ user }: ProfileHeaderCardProps) {
             <Ionicons
               name="person"
               size={36}
-              color={theme.colors.primary}
+              color={colors.primary}
             />
           )}
         </View>
         <View style={styles.nameSection}>
-          <Text style={styles.userName}>{user?.name || "Jawan Name"}</Text>
-          <View style={styles.societyBadge}>
+          <Text style={[styles.userName, { color: colors.text }]}>{user?.name || "Jawan Name"}</Text>
+          <View style={[styles.societyBadge, { backgroundColor: colors.primary + "1A" }]}>
             <Ionicons
               name="shield-checkmark"
               size={16}
-              color={theme.colors.primary}
+              color={colors.primary}
             />
-            <Text style={styles.societyText}>
+            <Text style={[styles.societyText, { color: colors.primary }]}>
               {user?.badgeNumber || "ITMS-9988"}
             </Text>
           </View>
         </View>
       </View>
 
-      <View style={styles.divider} />
+      <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
       <View style={styles.contactInfoSection}>
         <View style={styles.infoRow}>
-          <View style={styles.iconContainer}>
+          <View style={[styles.iconContainer, { backgroundColor: colors.primary + "1A" }]}>
             <Ionicons
               name="ribbon"
               size={18}
-              color={theme.colors.primary}
+              color={colors.primary}
             />
           </View>
           <View style={styles.infoTextContainer}>
-            <Text style={styles.infoLabel}>Designation</Text>
-            <Text style={styles.infoValue}>{user?.role || "Jawan"}</Text>
+            <Text style={[styles.infoLabel, { color: colors.subtext }]}>Designation</Text>
+            <Text style={[styles.infoValue, { color: colors.text }]}>{user?.role || "Jawan"}</Text>
           </View>
         </View>
 
         <View style={styles.infoRow}>
-          <View style={styles.iconContainer}>
-            <Ionicons name="call" size={18} color={theme.colors.primary} />
+          <View style={[styles.iconContainer, { backgroundColor: colors.primary + "1A" }]}>
+            <Ionicons name="call" size={18} color={colors.primary} />
           </View>
           <View style={styles.infoTextContainer}>
-            <Text style={styles.infoLabel}>Contact Number</Text>
-            <Text style={styles.infoValue}>
+            <Text style={[styles.infoLabel, { color: colors.subtext }]}>Contact Number</Text>
+            <Text style={[styles.infoValue, { color: colors.text }]}>
               {user?.phone_number || "9999999999"}
             </Text>
           </View>

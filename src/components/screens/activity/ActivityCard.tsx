@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { CycleReportEntry } from "@/types/traffic";
-import { theme } from "@/styles/theme";
+import { theme, useAppTheme } from "@/styles/theme";
 
 interface ActivityCardProps {
   item: CycleReportEntry;
@@ -11,6 +11,7 @@ interface ActivityCardProps {
 
 export default function ActivityCard({ item }: ActivityCardProps) {
   const { t } = useTranslation();
+  const { colors } = useAppTheme();
 
   const getLaneLabel = (laneId: string) => {
     switch (laneId) {
@@ -62,12 +63,12 @@ export default function ActivityCard({ item }: ActivityCardProps) {
   const modeColor = getModeColor(item.mode);
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
       {/* Top Header Row */}
       <View style={styles.cardHeader}>
         <View style={styles.laneContainer}>
           <View style={[styles.statusDot, { backgroundColor: modeColor }]} />
-          <Text style={styles.laneText}>{getLaneLabel(item.lane)}</Text>
+          <Text style={[styles.laneText, { color: colors.text }]}>{getLaneLabel(item.lane)}</Text>
         </View>
         <View style={[styles.durationBadge, { borderColor: modeColor + "30" }]}>
           <Ionicons name="time-outline" size={13} color={modeColor} style={{ marginRight: 3 }} />
@@ -79,48 +80,48 @@ export default function ActivityCard({ item }: ActivityCardProps) {
 
       {/* Info row */}
       <View style={styles.infoRow}>
-        <Text style={styles.modeText}>{getModeLabel(item.mode)}</Text>
-        <Text style={styles.timeText}>{item.time}</Text>
+        <Text style={[styles.modeText, { color: colors.text }]}>{getModeLabel(item.mode)}</Text>
+        <Text style={[styles.timeText, { color: colors.text }]}>{item.time}</Text>
       </View>
 
-      <View style={styles.divider} />
+      <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
       {/* YOLO Vehicle Count Grid */}
       <View style={styles.vehiclesContainer}>
         <View style={styles.vehicleHeader}>
-          <Ionicons name="eye-outline" size={13} color="#000000" style={{ marginRight: 4 }} />
-          <Text style={styles.vehicleTitle}>
+          <Ionicons name="eye-outline" size={13} color={colors.text} style={{ marginRight: 4 }} />
+          <Text style={[styles.vehicleTitle, { color: colors.text }]}>
             {t("activity.detected", "YOLO Detections")}: {item.total_vehicles}
           </Text>
         </View>
         
         <View style={styles.badgeRow}>
           {item.car > 0 && (
-            <View style={styles.vehicleBadge}>
-              <Ionicons name="car-outline" size={12} color="#000000" style={{ marginRight: 3 }} />
-              <Text style={styles.badgeText}>{item.car} Cars</Text>
+            <View style={[styles.vehicleBadge, { backgroundColor: colors.background }]}>
+              <Ionicons name="car-outline" size={12} color={colors.text} style={{ marginRight: 3 }} />
+              <Text style={[styles.badgeText, { color: colors.text }]}>{item.car} Cars</Text>
             </View>
           )}
           {item.motorcycle > 0 && (
-            <View style={styles.vehicleBadge}>
-              <Ionicons name="bicycle-outline" size={12} color="#000000" style={{ marginRight: 3 }} />
-              <Text style={styles.badgeText}>{item.motorcycle} Bikes</Text>
+            <View style={[styles.vehicleBadge, { backgroundColor: colors.background }]}>
+              <Ionicons name="bicycle-outline" size={12} color={colors.text} style={{ marginRight: 3 }} />
+              <Text style={[styles.badgeText, { color: colors.text }]}>{item.motorcycle} Bikes</Text>
             </View>
           )}
           {item.bus > 0 && (
-            <View style={styles.vehicleBadge}>
-              <Ionicons name="bus-outline" size={12} color="#000000" style={{ marginRight: 3 }} />
-              <Text style={styles.badgeText}>{item.bus} Buses</Text>
+            <View style={[styles.vehicleBadge, { backgroundColor: colors.background }]}>
+              <Ionicons name="bus-outline" size={12} color={colors.text} style={{ marginRight: 3 }} />
+              <Text style={[styles.badgeText, { color: colors.text }]}>{item.bus} Buses</Text>
             </View>
           )}
           {item.truck > 0 && (
-            <View style={styles.vehicleBadge}>
-              <Ionicons name="trending-up-outline" size={12} color="#000000" style={{ marginRight: 3 }} />
-              <Text style={styles.badgeText}>{item.truck} Trucks</Text>
+            <View style={[styles.vehicleBadge, { backgroundColor: colors.background }]}>
+              <Ionicons name="trending-up-outline" size={12} color={colors.text} style={{ marginRight: 3 }} />
+              <Text style={[styles.badgeText, { color: colors.text }]}>{item.truck} Trucks</Text>
             </View>
           )}
           {item.total_vehicles === 0 && (
-            <Text style={styles.noVehicles}>No vehicles detected in this cycle</Text>
+            <Text style={[styles.noVehicles, { color: colors.text }]}>No vehicles detected in this cycle</Text>
           )}
         </View>
       </View>

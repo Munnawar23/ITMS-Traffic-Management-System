@@ -7,6 +7,7 @@ import TopIndicator from "@/components/common/TopIndicator";
 import { useAuthStore } from "@/store/authStore";
 import { useTrafficStore } from "@/store/useTrafficStore";
 import { formatDate } from "@/utils/dateUtils";
+import { useAppTheme } from "@/styles/theme";
 
 // Modular Screen Components
 import HeroBanner from "@/components/screens/home/HeroBanner";
@@ -76,9 +77,10 @@ export default function HomeScreen() {
   };
 
   const modeInfo = getModeDetails();
+  const { colors } = useAppTheme();
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={["top"]}>
       <TopIndicator />
       <ScrollView
         showsVerticalScrollIndicator={false}

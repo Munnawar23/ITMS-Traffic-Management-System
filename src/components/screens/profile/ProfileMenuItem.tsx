@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
-import { theme } from "@/styles/theme";
+import { theme, useAppTheme } from "@/styles/theme";
 
 interface ProfileMenuItemProps {
   icon: keyof typeof Ionicons.glyphMap;
@@ -19,6 +19,8 @@ export default function ProfileMenuItem({
   showBorder = true,
   rightElement,
 }: ProfileMenuItemProps) {
+  const { colors } = useAppTheme();
+  
   const handlePress = () => {
     if (onPress) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -31,18 +33,21 @@ export default function ProfileMenuItem({
       activeOpacity={0.7}
       onPress={onPress ? handlePress : undefined}
       disabled={!onPress}
-      style={[styles.container, showBorder && styles.border]}
+      style={[
+        styles.container, 
+        showBorder && { borderBottomWidth: 1, borderBottomColor: colors.border }
+      ]}
     >
       <View style={styles.leftSection}>
-        <View style={styles.iconContainer}>
-          <Ionicons name={icon} size={22} color={theme.colors.primary} />
+        <View style={[styles.iconContainer, { backgroundColor: colors.primary + "1A" }]}>
+          <Ionicons name={icon} size={22} color={colors.primary} />
         </View>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
       </View>
       {rightElement ? (
         rightElement
       ) : (
-        <Ionicons name="chevron-forward" size={20} color="#CBD5E1" />
+        <Ionicons name="chevron-forward" size={20} color={colors.subtext} />
       )}
     </TouchableOpacity>
   );
@@ -55,10 +60,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 16,
   },
-  border: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#F1F5F9",
-  },
   leftSection: {
     flexDirection: "row",
     alignItems: "center",
@@ -67,7 +68,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: theme.colors.primary + "10",
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12,
@@ -75,6 +75,5 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: theme.fontFamily["body-medium"],
-    color: "#000000",
   },
 });

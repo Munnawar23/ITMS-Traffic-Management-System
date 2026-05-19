@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Linking, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
+import { Alert, Linking, ScrollView, StyleSheet, Switch, Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
@@ -8,18 +8,23 @@ import { useRouter } from "expo-router";
 import Button from "@/components/common/Button";
 import ProfileMenuItem from "@/components/screens/profile/ProfileMenuItem";
 import TopIndicator from "@/components/common/TopIndicator";
-import { theme } from "@/styles/theme";
+import { theme, useAppTheme } from "@/styles/theme";
 import { useAuthStore } from "@/store/authStore";
+import { useThemeStore } from "@/store/useThemeStore";
 import ProfileHeaderCard from "@/components/screens/profile/ProfileHeaderCard";
+import * as Haptics from "expo-haptics";
 
 export default function ProfileScreen() {
   const { user, logout, setLanguage } = useAuthStore();
+  const { themeMode, setThemeMode } = useThemeStore();
+  const { colors } = useAppTheme();
   const router = useRouter();
   const { t, i18n } = useTranslation();
 
   const isHindi = i18n.language === "hi";
 
   const toggleLanguage = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     const nextLanguage = isHindi ? "en" : "hi";
     i18n.changeLanguage(nextLanguage);
     setLanguage(nextLanguage);
@@ -48,7 +53,7 @@ export default function ProfileScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={["top"]}>
       <TopIndicator />
 
       <ScrollView
@@ -60,24 +65,24 @@ export default function ProfileScreen() {
 
         {/* Content Settings Section */}
         <View style={styles.content}>
-          <Text style={styles.sectionLabel}>
+          <Text style={[styles.sectionLabel, { color: colors.text }]}>
             {t("profile.languageSettings")}
           </Text>
 
-          <View style={styles.card}>
+          <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
             <ProfileMenuItem
               icon="language-outline"
               title={isHindi ? t("common.hindi") : t("common.english")}
               showBorder={false}
               rightElement={
                 <View style={styles.languageToggle}>
-                  <Text style={styles.languageCode}>
+                  <Text style={[styles.languageCode, { color: colors.text }]}>
                     {isHindi ? "HI" : "EN"}
                   </Text>
                   <Switch
                     trackColor={{
                       false: "#dee2e6",
-                      true: theme.colors.primary,
+                      true: colors.primary,
                     }}
                     thumbColor={isHindi ? "#ffffff" : "#f4f3f4"}
                     onValueChange={toggleLanguage}
@@ -88,9 +93,60 @@ export default function ProfileScreen() {
             />
           </View>
 
-          <Text style={styles.sectionLabel}>{t("profile.support")}</Text>
+          {/* Theme Settings Section (3 Selectable Widgets) */}
+          <Text style={[styles.sectionLabel, { color: colors.text }]}>
+            {t("profile.themeSettings", "Theme Mode")}
+          </Text>
 
-          <View style={styles.card}>
+          <View style={styles.themeRow}>
+            {(["system", "light", "dark"] as const).map((mode) => {
+              const isSelected = themeMode === mode;
+              let iconName: any = "desktop-outline";
+              let modeName = t("profile.themeSystem", "System");
+              if (mode === "light") {
+                iconName = "sunny-outline";
+                modeName = t("profile.themeLight", "Light");
+              } else if (mode === "dark") {
+                iconName = "moon-outline";
+                modeName = t("profile.themeDark", "Dark");
+              }
+
+              return (
+                <TouchableOpacity
+                  key={mode}
+                  activeOpacity={0.7}
+                  onPress={async () => {
+                    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                    setThemeMode(mode);
+                  }}
+                  style={[
+                    styles.themeWidget,
+                    { 
+                      backgroundColor: isSelected ? colors.primary : colors.card,
+                      borderColor: isSelected ? colors.primary : colors.border
+                    }
+                  ]}
+                >
+                  <Ionicons 
+                    name={iconName} 
+                    size={18} 
+                    color={isSelected ? "#FFFFFF" : colors.text} 
+                    style={{ marginBottom: 6 }} 
+                  />
+                  <Text style={[
+                    styles.themeWidgetText, 
+                    { color: isSelected ? "#FFFFFF" : colors.text }
+                  ]}>
+                    {modeName}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+
+          <Text style={[styles.sectionLabel, { color: colors.text }]}>{t("profile.support")}</Text>
+
+          <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
             <ProfileMenuItem
               icon="call-outline"
               title={t("profile.contactUs")}
@@ -111,7 +167,7 @@ export default function ProfileScreen() {
 
           {/* Version Footer Label */}
           <View style={styles.footer}>
-            <Text style={styles.versionText}>{t("profile.version")}</Text>
+            <Text style={[styles.versionText, { color: colors.subtext }]}>{t("profile.version")}</Text>
           </View>
         </View>
       </ScrollView>
@@ -122,7 +178,6 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
   },
   scrollContent: {
     paddingBottom: 40,
@@ -134,18 +189,15 @@ const styles = StyleSheet.create({
   sectionLabel: {
     fontSize: 12,
     fontFamily: theme.fontFamily["body-semibold"],
-    color: "#000000",
     textTransform: "uppercase",
     letterSpacing: 2,
     marginBottom: 16,
     marginLeft: 4,
   },
   card: {
-    backgroundColor: "#ffffff",
     borderRadius: 24,
     paddingHorizontal: 20,
     borderWidth: 1,
-    borderColor: theme.colors.border,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
@@ -161,7 +213,29 @@ const styles = StyleSheet.create({
     marginRight: 8,
     fontSize: 14,
     fontFamily: theme.fontFamily["body-medium"],
-    color: "#000000",
+  },
+  themeRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 10,
+    marginBottom: 24,
+  },
+  themeWidget: {
+    flex: 1,
+    borderRadius: 16,
+    paddingVertical: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1.5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  themeWidgetText: {
+    fontSize: 12,
+    fontFamily: theme.fontFamily["body-medium"],
   },
   logoutContainer: {
     marginTop: 16,
@@ -173,7 +247,6 @@ const styles = StyleSheet.create({
   versionText: {
     fontSize: 12,
     fontFamily: theme.fontFamily.body,
-    color: "#000000",
     textTransform: "uppercase",
     letterSpacing: 1,
   },

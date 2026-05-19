@@ -5,6 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { useAuthStore } from "@/store/authStore";
+import { useAppTheme } from "@/styles/theme";
 import i18next from "i18next";
 import Toast from "react-native-toast-message";
 
@@ -21,6 +22,7 @@ export default function RootLayout() {
   });
 
   const language = useAuthStore((state) => state.language);
+  const { isDark } = useAppTheme();
 
   useEffect(() => {
     if (loaded || error) {
@@ -41,7 +43,7 @@ export default function RootLayout() {
   return (
     <>
       <Stack screenOptions={{ headerShown: false }} />
-      <StatusBar style="dark" />
+      <StatusBar style={isDark ? "light" : "dark"} />
       <Toast />
     </>
   );

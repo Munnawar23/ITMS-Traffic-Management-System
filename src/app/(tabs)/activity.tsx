@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import EmptyState from "@/components/common/EmptyState";
 import TopIndicator from "@/components/common/TopIndicator";
 import ScreenHeader from "@/components/common/ScreenHeader";
-import { theme } from "@/styles/theme";
+import { theme, useAppTheme } from "@/styles/theme";
 import { useTrafficStore } from "@/store/useTrafficStore";
 import ActivityCard from "@/components/screens/activity/ActivityCard";
 import { wp, hp } from "@/helpers";
@@ -15,6 +15,7 @@ export default function ActivityScreen() {
   const { t } = useTranslation();
   const { logs, isLoading, fetchLogs } = useTrafficStore();
   const [refreshing, setRefreshing] = useState(false);
+  const { colors } = useAppTheme();
 
   // Load today's logs on mount
   useEffect(() => {
@@ -41,7 +42,7 @@ export default function ActivityScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={["top"]}>
       <TopIndicator />
 
       {logs.length > 0 ? (
@@ -56,8 +57,8 @@ export default function ActivityScreen() {
             <RefreshControl
               refreshing={refreshing || isLoading}
               onRefresh={handleRefresh}
-              colors={[theme.colors.primary]}
-              tintColor={theme.colors.primary}
+              colors={[colors.primary]}
+              tintColor={colors.primary}
             />
           }
         />
@@ -68,8 +69,8 @@ export default function ActivityScreen() {
             <RefreshControl
               refreshing={refreshing || isLoading}
               onRefresh={handleRefresh}
-              colors={[theme.colors.primary]}
-              tintColor={theme.colors.primary}
+              colors={[colors.primary]}
+              tintColor={colors.primary}
             />
           }
         >
