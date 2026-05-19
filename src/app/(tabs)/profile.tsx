@@ -55,7 +55,7 @@ export default function ProfileScreen() {
   };
 
   const handleContactUs = () => {
-    Linking.openURL("tel:7014102656");
+    Linking.openURL("mailto:mdfurqan.k77@gmail.com?subject=ITMS%20Support");
   };
 
   return (
@@ -154,7 +154,7 @@ export default function ProfileScreen() {
 
           <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
             <ProfileMenuItem
-              icon="call-outline"
+              icon="mail-outline"
               title={t("profile.contactUs")}
               onPress={handleContactUs}
               showBorder={false}
