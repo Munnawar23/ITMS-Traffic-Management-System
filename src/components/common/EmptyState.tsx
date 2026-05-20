@@ -2,7 +2,7 @@ import { theme, useAppTheme } from "@/styles/theme";
 import { Ionicons } from "@expo/vector-icons";
 import LottieView from "lottie-react-native";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Platform } from "react-native";
 
 interface EmptyStateProps {
   title: string;
@@ -22,7 +22,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <View style={styles.container}>
       <View style={[styles.iconCircle, { backgroundColor: colors.primary + "15" }]}>
-        {lottieSource ? (
+        {lottieSource && Platform.OS !== "web" ? (
           <LottieView
             source={lottieSource}
             autoPlay

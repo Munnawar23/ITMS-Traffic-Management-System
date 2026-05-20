@@ -3,7 +3,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet } from "react-native";
+import { Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TabLayout() {
@@ -21,9 +21,14 @@ export default function TabLayout() {
         tabBarStyle: {
           borderTopWidth: 0,
           backgroundColor: tabBgColor,
-          height: 65 + insets.bottom,
-          paddingBottom: insets.bottom > 0 ? insets.bottom - 4 : 10,
-          paddingTop: 8,
+          height: Platform.OS === "web" ? 85 : 65 + insets.bottom,
+          paddingBottom:
+            Platform.OS === "web"
+              ? 8
+              : insets.bottom > 0
+                ? insets.bottom - 4
+                : 10,
+          paddingTop: Platform.OS === "web" ? 6 : 8,
           shadowColor: "#000",
           shadowOffset: {
             width: 0,
@@ -95,16 +100,3 @@ export default function TabLayout() {
     </Tabs>
   );
 }
-
-const styles = StyleSheet.create({
-  shadow: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: -4,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 8,
-  },
-});

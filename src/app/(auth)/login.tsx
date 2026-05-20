@@ -15,6 +15,8 @@ import {
   Text,
   TextInput,
   View,
+  Platform,
+  ScrollView,
 } from "react-native";
 import { Image } from "expo-image";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -23,6 +25,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function LoginScreen() {
   const { t } = useTranslation();
   const router = useRouter();
+  const ScrollContainer = Platform.OS === "web" ? ScrollView : KeyboardAwareScrollView;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -37,7 +40,9 @@ export default function LoginScreen() {
   };
 
   const handleLogin = async () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    if (Platform.OS !== "web") {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
     if (!validateEmail(email)) {
       Alert.alert(
         t("login.validation.invalidEmail"),
@@ -78,7 +83,7 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      <KeyboardAwareScrollView
+      <ScrollContainer
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
         enableOnAndroid={true}
@@ -231,7 +236,7 @@ export default function LoginScreen() {
             <Text style={styles.versionText}>{t("profile.version")}</Text>
           </View>
         </View>
-      </KeyboardAwareScrollView>
+      </ScrollContainer>
     </SafeAreaView>
   );
 }
@@ -243,6 +248,13 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
+    width: "100%",
+    ...Platform.select({
+      web: {
+        maxWidth: 500,
+        alignSelf: "center",
+      },
+    }),
   },
   innerContainer: {
     flex: 1,

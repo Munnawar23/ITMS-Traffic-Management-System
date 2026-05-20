@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Linking, ScrollView, StyleSheet, Switch, Text, View, TouchableOpacity } from "react-native";
+import { Alert, Linking, ScrollView, StyleSheet, Switch, Text, View, TouchableOpacity, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
@@ -187,6 +187,13 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 40,
+    width: "100%",
+    ...Platform.select({
+      web: {
+        maxWidth: 600,
+        alignSelf: "center",
+      },
+    }),
   },
   content: {
     paddingHorizontal: 20,

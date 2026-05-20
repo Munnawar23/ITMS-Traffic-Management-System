@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
+import {
+  FlatList,
+  Platform,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import EmptyState from "@/components/common/EmptyState";
-import TopIndicator from "@/components/common/TopIndicator";
 import ScreenHeader from "@/components/common/ScreenHeader";
-import { theme, useAppTheme } from "@/styles/theme";
-import { useTrafficStore } from "@/store/useTrafficStore";
+import TopIndicator from "@/components/common/TopIndicator";
 import ActivityCard from "@/components/screens/activity/ActivityCard";
-import { wp, hp } from "@/helpers";
+import { hp } from "@/helpers";
+import { useTrafficStore } from "@/store/useTrafficStore";
+import { theme, useAppTheme } from "@/styles/theme";
 
 export default function ActivityScreen() {
   const { t } = useTranslation();
@@ -19,7 +25,9 @@ export default function ActivityScreen() {
 
   // Load today's logs on mount
   useEffect(() => {
-    console.log(`[📊 ACTIVITY SCREEN] Component mounted. Triggering initial daily logs fetch...`);
+    console.log(
+      `[📊 ACTIVITY SCREEN] Component mounted. Triggering initial daily logs fetch...`,
+    );
     fetchLogs();
   }, [fetchLogs]);
 
@@ -42,7 +50,10 @@ export default function ActivityScreen() {
   );
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={["top"]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+      edges={["top"]}
+    >
       <TopIndicator />
 
       {logs.length > 0 ? (
@@ -76,7 +87,10 @@ export default function ActivityScreen() {
         >
           <EmptyState
             title={t("activity.noActivity", "No Activity Logged")}
-            subtitle={t("activity.noActivityDesc", "No signal cycles recorded on Raspberry Pi for today.")}
+            subtitle={t(
+              "activity.noActivityDesc",
+              "No signal cycles recorded on Raspberry Pi for today.",
+            )}
             lottieSource={require("@/assets/animations/light.json")}
           />
         </ScrollView>
@@ -93,11 +107,17 @@ const styles = StyleSheet.create({
 
   listContent: {
     paddingBottom: hp(4),
+    width: "100%",
+    ...Platform.select({
+      web: {
+        maxWidth: 600,
+        alignSelf: "center",
+      },
+    }),
   },
   emptyContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-
 });

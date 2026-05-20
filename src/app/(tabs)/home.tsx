@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import TopIndicator from "@/components/common/TopIndicator";
@@ -161,6 +161,13 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 20,
+    width: "100%",
+    ...Platform.select({
+      web: {
+        maxWidth: 600,
+        alignSelf: "center",
+      },
+    }),
   },
   statsGrid: {
     paddingHorizontal: 16,
